@@ -78,7 +78,7 @@ export function createFiller({ sizes, info }, { shared, slab }) {
   const place = (path, params) => {
     slots.forEach((k, i) => {
       bubbleCenter(path, k, sizes[k], params, pos);
-      mesh.setMatrixAt(i, bubbleMatrix(pos, info[k].ai ? params.yaw : -params.yaw, m));
+      mesh.setMatrixAt(i, bubbleMatrix(pos, 0, m));
     });
     mesh.instanceMatrix.needsUpdate = true;
   };

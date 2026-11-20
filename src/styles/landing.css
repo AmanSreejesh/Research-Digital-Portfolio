@@ -1,5 +1,5 @@
-/* Landing sequence: 3D stage, its overlays, and the static chat used for
-   reduced motion, no WebGL, and screen readers. */
+/* Landing sequence: 3D stage, its overlays (narration, request tracker, headline),
+   and the static chat used for reduced motion, no WebGL, and screen readers. */
 
 .landing {
   position: relative;
@@ -33,6 +33,7 @@
 .landing__veil {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: var(--bg);
   opacity: 0;
   pointer-events: none;
@@ -42,10 +43,9 @@
 .landing__skip,
 .landing__hint {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
+  font-size: 0.875rem;
 }
 
 .landing__counter {
@@ -62,7 +62,7 @@
 }
 
 .landing__hint {
-  bottom: 28px;
+  bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
   color: var(--text-2);
@@ -103,14 +103,209 @@
 
 .landing__preview .chat-static {
   width: 100%;
-  max-width: 640px;
+  max-width: 560px;
 }
 
-/* Headline over the canvas at the end of the sequence. */
+/* ---------- Narration and the request tracker ---------- */
+
+.story {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.story__captions {
+  position: relative;
+}
+
+.story__caption {
+  position: absolute;
+  inset: 0 0 auto 0;
+  margin: 0;
+  font-size: clamp(1.125rem, 2vw, 2rem);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.story__caption em {
+  font-style: normal;
+  color: var(--wrong);
+}
+
+.story__spec-title {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+.spec__item {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 11px 12px;
+  margin: 0 -12px;
+  border-top: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateX(14px);
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out), background-color 0.4s var(--ease-out);
+}
+
+.spec__item.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.spec__item.is-new {
+  background: rgba(43, 214, 123, 0.08);
+}
+
+.spec__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--correct);
+  transition: background-color 0.3s;
+}
+
+.spec__state {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--correct);
+  white-space: nowrap;
+}
+
+.spec__item.is-lost {
+  background: rgba(255, 74, 61, 0.12);
+  border-top-color: transparent;
+}
+
+.spec__item.is-lost .spec__dot {
+  background: var(--wrong);
+  animation: lost-pulse 1.6s ease-out infinite;
+}
+
+.spec__item.is-lost .spec__state {
+  color: var(--wrong);
+}
+
+@keyframes lost-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 74, 61, 0.55);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 9px rgba(255, 74, 61, 0);
+  }
+}
+
+.spec__short {
+  display: none;
+}
+
+/* Wide screens: chat on the left, narration and tracker in a column on the right. */
+@media (min-width: 900px) and (min-aspect-ratio: 11/10) {
+  .story {
+    top: calc(var(--header-h) + 72px);
+    bottom: 72px;
+    right: var(--gutter);
+    width: min(36vw, 480px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .story__captions {
+    min-height: 8.5em;
+  }
+  .story__caption {
+    text-shadow: 0 2px 18px rgba(6, 6, 6, 0.9);
+  }
+  /* A solid backing keeps the tracker readable when bubbles pass behind it. */
+  .story__spec {
+    padding: 20px 22px 10px;
+    background: rgba(6, 6, 6, 0.86);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+  }
+  .spec__item {
+    margin: 0 -10px;
+    padding: 11px 10px;
+  }
+}
+
+/* Narrow screens: narration like subtitles in a panel at the bottom, with the tracker as chips. */
+@media (max-width: 899px), (max-aspect-ratio: 11/10) {
+  .story {
+    inset: auto 0 0 0;
+    padding: 16px var(--gutter) 18px;
+    background: rgba(6, 6, 6, 0.94);
+    border-top: 1px solid var(--hairline);
+  }
+  .story__captions {
+    min-height: 5.4em;
+  }
+  .story__caption {
+    font-size: 1.0625rem;
+    line-height: 1.34;
+  }
+  .story__spec {
+    margin-top: 12px;
+  }
+  .story__spec-title {
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+  }
+  .spec {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .spec__item {
+    display: inline-flex;
+    gap: 7px;
+    margin: 0;
+    padding: 4px 9px;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    transform: translateY(6px);
+  }
+  .spec__item.is-lost {
+    border-color: var(--wrong);
+  }
+  .spec__dot {
+    width: 7px;
+    height: 7px;
+  }
+  .spec__name,
+  .spec__state {
+    display: none;
+  }
+  .spec__short {
+    display: inline;
+  }
+  .spec__item.is-lost .spec__short {
+    color: var(--wrong);
+  }
+  .landing__hint {
+    display: none;
+  }
+}
+
+/* ---------- Headline over the canvas at the end of the sequence ---------- */
+
 .landing__headline {
   position: absolute;
   inset: auto 0 0 0;
-  z-index: 2;
+  z-index: 3;
   padding: 0 0 clamp(48px, 9vh, 96px);
   pointer-events: none;
   visibility: hidden;
@@ -122,24 +317,25 @@
 }
 
 .headline__title {
-  font-size: clamp(2.25rem, 5.6vw, 4.75rem);
-  line-height: 1.02;
-  max-width: 17ch;
+  font-size: clamp(2.5rem, 6.4vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  max-width: 16ch;
 }
 
 .headline__body {
   margin-top: 28px;
-  font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
-  line-height: 1.5;
-  max-width: 50ch;
+  font-size: clamp(1.1875rem, 1.7vw, 1.5rem);
+  line-height: 1.45;
+  max-width: 46ch;
 }
 
 .headline__stat {
   margin-top: 20px;
-  font-size: 0.9375rem;
+  font-size: var(--fs-small);
   line-height: 1.55;
   color: var(--text-2);
-  max-width: 62ch;
+  max-width: 60ch;
 }
 
 .headline__sign {
@@ -152,17 +348,17 @@
 
 .headline__name {
   font-weight: 500;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
 }
 
 .headline__course {
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   color: var(--text-2);
 }
 
 .headline__link {
-  font-size: 1rem;
+  font-size: 1.125rem;
 }
 
 @media (min-width: 900px) {
@@ -171,7 +367,6 @@
   }
 }
 
-/* SplitText lines */
 .split-line {
   display: block;
 }
@@ -199,7 +394,7 @@
   position: static;
   visibility: visible;
   pointer-events: auto;
-  padding: 72px 0 0;
+  padding: 80px 0 0;
 }
 
 .landing.is-static .landing__headline .wrap {
@@ -211,9 +406,27 @@
 .chat-static {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-width: 680px;
+  gap: 16px;
+  max-width: 720px;
   font-family: var(--font-chat);
+}
+
+.chat-caption {
+  margin: 28px 0 8px;
+  font-family: var(--font-sans);
+  font-size: clamp(1.25rem, 2.4vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  max-width: 34ch;
+}
+
+.chat-caption:first-child {
+  margin-top: 0;
+}
+
+.chat-caption--wrong {
+  color: var(--wrong);
 }
 
 .msg {
@@ -224,15 +437,15 @@
 
 .msg__num {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   color: var(--text-3);
   margin-bottom: 6px;
 }
 
 .msg__bubble {
-  padding: 12px 16px;
+  padding: 13px 17px;
   border-radius: 18px;
-  font-size: 1rem;
+  font-size: 1.0625rem;
   line-height: 1.45;
 }
 
@@ -272,12 +485,15 @@
 
 .msg__hl {
   color: var(--wrong);
+  text-decoration: underline;
+  text-decoration-color: var(--wrong);
+  text-underline-offset: 3px;
 }
 
 .msg__thumb {
   margin-top: 12px;
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   height: auto;
   border-radius: 6px;
 }
@@ -288,13 +504,13 @@
   gap: 7px;
   margin-top: 8px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 
 .msg__status::before {
   content: '';
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: currentColor;
 }
@@ -310,7 +526,7 @@
 .msg__note {
   margin-top: 6px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--wrong);
 }
 
@@ -320,7 +536,7 @@
   gap: 14px;
   margin: 18px 0;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--text-2);
 }
 
@@ -347,11 +563,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing__hint span {
+  .landing__hint span,
+  .spec__item.is-lost .spec__dot {
     animation: none;
   }
   .landing__canvas-wrap,
-  .landing__preview {
+  .landing__preview,
+  .spec__item {
     transition: none;
   }
 }

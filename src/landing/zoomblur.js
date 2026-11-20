@@ -39,4 +39,8 @@ export class ZoomBlurEffect extends Effect {
   set strength(v) {
     this.uniforms.get('strength').value = v;
   }
+
+  set center([x, y]) {
+    this.uniforms.get('center').value.set(x, y);
+  }
 }

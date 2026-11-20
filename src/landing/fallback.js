@@ -1,8 +1,8 @@
 // The static chat. It's the whole landing page for reduced motion and browsers
 // without WebGL, and in the 3D version it stays in the page (visually hidden)
-// so screen readers get every readable message in order.
+// so screen readers get the story and every readable message in order.
 
-import { script, gaps } from '../config.js';
+import { script, gaps, captions } from '../config.js';
 import { thumbDataUrl, THUMB_ALT } from './thumbnails.js';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -12,7 +12,7 @@ function messageHtml(m) {
   if (m.highlight) text = text.replace(esc(m.highlight), `<span class="msg__hl">${esc(m.highlight)}</span>`);
   const who = m.side === 'user' ? 'Student' : 'AI';
   const thumb = m.thumb
-    ? `<img class="msg__thumb" src="${thumbDataUrl(m.thumb)}" alt="${esc(THUMB_ALT[m.thumb])}" width="360" height="259" />`
+    ? `<img class="msg__thumb" src="${thumbDataUrl(m.thumb)}" alt="${esc(THUMB_ALT[m.thumb])}" width="360" height="288" />`
     : '';
   const statusEl = m.status
     ? `<span class="msg__status">${m.status === 'correct' ? 'correct' : 'wrong'}</span>`
@@ -25,11 +25,17 @@ function messageHtml(m) {
   </li>`;
 }
 
+const captionHtml = (c) =>
+  `<li class="chat-caption${c.id === 'mistake' ? ' chat-caption--wrong' : ''}">${esc(c.text)}</li>`;
+
 export function renderStatic(listEl) {
   const parts = [];
   for (const m of script) {
+    captions.filter((c) => c.before === m.pos).forEach((c) => parts.push(captionHtml(c)));
     parts.push(messageHtml(m));
+    const after = captions.filter((c) => c.after === m.pos);
     const gap = gaps.find((g) => g.after === m.pos);
+    after.forEach((c) => parts.push(captionHtml(c)));
     if (gap) {
       const cls = gap.spreading ? 'gap gap--spreading' : 'gap gap--correct';
       parts.push(`<li class="${cls}" role="separator">${gap.count} more messages</li>`);

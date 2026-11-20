@@ -3,88 +3,59 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- @head title="About" path="about.html" description="About Aman Sreejesh, a high school student researcher studying how reliable AI is in long conversations." -->
+    <!-- @head title="About" path="about.html" description="About Aman Sreejesh, a high school student researcher studying how reliable LLMs are in long conversations." -->
     <link rel="stylesheet" href="/src/styles/main.css" />
+    <link rel="stylesheet" href="/src/styles/about.css" />
     <script>document.documentElement.classList.add('js')</script>
   </head>
   <body>
     <!-- @header current="about" -->
 
     <main id="main" class="page-main">
-      <section class="page-head">
+      <section class="page-head about-head">
         <div class="wrap">
-          <p class="label reveal">About me</p>
-          <h1 class="page-title reveal" style="margin-top: 20px">Aman Sreejesh</h1>
-          <!-- DRAFT: rewrite in your own words -->
-          <p class="lede reveal">Student researcher studying how reliable AI is in long conversations.</p>
+          <p class="eyebrow reveal">About me</p>
+          <h1 class="page-title reveal">Aman<br />Sreejesh</h1>
+          <p class="lede reveal">Student researcher studying how reliable LLMs are in long conversations.</p>
         </div>
       </section>
 
-      <section class="section" style="padding-top: 0">
-        <div class="wrap grid split">
-          <div class="split__aside reveal">
-            <h2 class="label">Bio</h2>
-          </div>
-          <div class="split__main prose reveal">
-            <!-- DRAFT: rewrite in your own words. Everything in these paragraphs is a placeholder. -->
+      <section class="section about-bio">
+        <div class="wrap about-grid">
+          <p class="label reveal">Bio</p>
+          <!-- DRAFT: rewrite in your own words -->
+          <div class="about-bio__text reveal">
+            <p>I'm a high school student in Georgia, taking AP Research this year.</p>
             <p>
-              I'm a high school student in Georgia, and this year I'm taking AP Research. Most of what I do outside
-              class is machine learning. I like building models from scratch so I can see what's happening inside
-              them, and lately I've been reading a lot about how language models get tested.
+              I'm interested in computer science across a lot of fields, from programming and web development to AI and
+              machine learning. I like trying new technologies as they come out and seeing what they can do.
             </p>
             <p>
-              I got interested in AI reliability from using chatbots on long coding projects. The first answers were
-              usually good, but after enough back-and-forth something I had asked for earlier would quietly
-              disappear. When I found a paper that measured the same problem across more than 200,000 conversations,
-              I wanted to know if there's a point where a conversation can't be fixed anymore.
-            </p>
-            <p>
-              After this project I want to keep working on how AI systems are evaluated, especially ways to tell when
+              After this project, I want to keep working on how AI systems are evaluated, especially ways to tell when
               a model's answer can be trusted.
             </p>
           </div>
         </div>
       </section>
 
-      <section class="section">
-        <div class="wrap grid split">
-          <div class="split__aside reveal">
-            <h2 class="label">Interests and skills</h2>
-          </div>
-          <div class="split__main reveal">
-            <!-- DRAFT: edit this list -->
-            <ul class="mono-list">
-              <li>Machine learning</li>
-              <li>Python</li>
-              <li>PyTorch</li>
-              <li>Evaluating language models</li>
-            </ul>
-          </div>
+      <section class="section about-into" aria-label="Interests">
+        <div class="wrap">
+          <p class="sr-only">I'm into programming, web development, AI, machine learning and trying new technologies.</p>
+          <p class="about-into__line reveal" aria-hidden="true">
+            <span class="about-into__lead">I'm into</span>
+            <span class="about-into__word" data-rotate="programming|web development|AI|machine learning|trying new tech"
+              >programming</span
+            ><span class="about-into__caret"></span>
+          </p>
         </div>
       </section>
 
-      <section class="section">
-        <div class="wrap grid split">
-          <div class="split__aside reveal">
-            <h2 class="label">Activities</h2>
-          </div>
-          <div class="split__main reveal">
-            <!-- DRAFT: replace with your real activities. The item below is only an example from the brief. -->
-            <ul class="mono-list">
-              <li>Technology Student Association</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="wrap grid split">
-          <div class="split__aside reveal">
-            <h2 class="label">Contact</h2>
-          </div>
-          <div class="split__main reveal">
-            <p class="muted" style="margin-bottom: 12px">The best way to reach me is email.</p>
-            <a class="contact-link" href="mailto:amansreejesh9@gmail.com" data-email>amansreejesh9@gmail.com</a>
+      <section class="section about-contact">
+        <div class="wrap about-grid">
+          <p class="label reveal">Contact</p>
+          <div class="reveal">
+            <p class="muted about-contact__note">Email is the best way to reach me.</p>
+            <a class="about-contact__link" href="mailto:amansreejesh9@gmail.com" data-email>amansreejesh9@gmail.com</a>
           </div>
         </div>
       </section>

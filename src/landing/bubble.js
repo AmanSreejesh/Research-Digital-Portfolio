@@ -3,19 +3,19 @@
 
 import * as THREE from 'three';
 import { status } from '../config.js';
-import { drawThumb } from './thumbnails.js';
+import { drawThumb, THUMB_RATIO, GHOST } from './thumbnails.js';
 import { COLORS, bubbleMaterial, haloMaterial, instanceAttributes, applyAttributes } from './material.js';
 
 const CHAT_FONT = '-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 const MONO_FONT = '"IBM Plex Mono", ui-monospace, monospace';
 
 // World-unit text metrics.
-const FS = 0.138;
-const LH = 0.196;
-const PAD = 0.2;
-const THUMB_W = 2.15;
-const THUMB_H = THUMB_W * 0.72;
-const MAX_W = { user: 2.85, ai: 3.4 };
+const FS = 0.152;
+const LH = 0.216;
+const PAD = 0.22;
+const THUMB_W = 2.5;
+const THUMB_H = THUMB_W * THUMB_RATIO;
+const MAX_W = { user: 3.0, ai: 3.7 };
 
 function tokenize(text, highlight) {
   const words = text.split(' ');
@@ -75,19 +75,38 @@ function drawFace(canvas, msg, m, ppu, { chars = Infinity, red = false } = {}) {
   let left = chars;
   const x0 = PAD * ppu;
   const y0 = PAD * ppu + px * 0.86;
+  const space = ctx.measureText(' ').width;
   m.lines.forEach((line, li) => {
-    line.items.forEach((it) => {
+    line.items.forEach((it, wi) => {
       if (left <= 0) return;
       const shown = it.w.slice(0, Math.max(0, left));
       left -= it.w.length + 1;
-      ctx.fillStyle = red && it.hl ? status.wrong : user ? COLORS.userInk : COLORS.aiInk;
-      ctx.fillText(shown, x0 + it.x, y0 + li * LH * ppu);
+      const hot = red && it.hl;
+      ctx.fillStyle = hot ? status.wrong : user ? COLORS.userInk : COLORS.aiInk;
+      const by = y0 + li * LH * ppu;
+      ctx.fillText(shown, x0 + it.x, by);
+      if (hot) {
+        // Underline the false claim, joined across the spaces between its words.
+        const next = line.items[wi + 1];
+        const w = it.width + (next && next.hl ? space : 0);
+        ctx.fillRect(x0 + it.x, by + px * 0.16, w, Math.max(2, px * 0.075));
+      }
     });
   });
   if (msg.thumb && chars === Infinity) {
     const ty = (PAD + m.textH + 0.2) * ppu;
-    drawThumb(ctx, x0, ty, THUMB_W * ppu, THUMB_H * ppu, msg.thumb);
+    const ghost = red || (msg.status === 'wrong' && !msg.highlight);
+    drawThumb(ctx, x0, ty, THUMB_W * ppu, THUMB_H * ppu, msg.thumb, { ghost });
   }
+}
+
+// Center of the red "missing form" marker, in the bubble's own coordinates.
+function ghostPoint(msg, m, size) {
+  const g = GHOST[msg.thumb];
+  if (!g) return null;
+  const left = -size.w / 2 + PAD;
+  const top = size.h / 2 - (PAD + m.textH + 0.2);
+  return new THREE.Vector3(left + (g.x + g.w / 2) * THUMB_W, top - (g.y + g.h / 2) * THUMB_H, 0);
 }
 
 // UV center of the highlighted sentence, where message 47's red starts.
@@ -110,10 +129,10 @@ function highlightOrigin(m, size) {
 }
 
 function labelTexture(text, color, ppu) {
-  const h = 0.17;
+  const h = 0.2;
   const c = document.createElement('canvas');
   const ctx = c.getContext('2d');
-  const px = 0.105 * ppu;
+  const px = 0.125 * ppu;
   ctx.font = `500 ${px}px ${MONO_FONT}`;
   const tw = ctx.measureText(text).width;
   c.width = Math.ceil(tw + px * 1.6 + 8);
@@ -188,7 +207,7 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
   const group = new THREE.Group();
   group.add(mesh);
 
-  const out = { msg, group, mesh, size, single, labels: null, note: null, halo: null };
+  const out = { msg, group, mesh, size, single, labels: null, note: null, halo: null, ghost: ghostPoint(msg, m, size) };
 
   if (isAi && msg.status) {
     const hgeo = new THREE.PlaneGeometry(1, 1);
@@ -202,7 +221,7 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
     const correct = labelTexture('correct', status.correct, ppu);
     const wrong = labelTexture('wrong', status.wrong, ppu);
     const label = labelMesh(msg.status === 'wrong' ? wrong : correct, true);
-    label.position.set(-size.w / 2 + label.geometry.parameters.width / 2 + 0.04, -size.h / 2 - 0.16, 0.03);
+    label.position.set(-size.w / 2 + label.geometry.parameters.width / 2 + 0.04, -size.h / 2 - 0.19, 0.03);
     group.add(label);
     out.labels = { mesh: label, correct, wrong };
 
@@ -253,7 +272,7 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
     if (!out.note) return;
     const n = out.noteInfo;
     if (beside) out.note.position.set(size.w / 2 + n.w / 2 + 0.25, size.h / 2 - 0.3, 0.03);
-    else out.note.position.set(-size.w / 2 + n.w / 2 + 0.04, -size.h / 2 - 0.37, 0.03);
+    else out.note.position.set(-size.w / 2 + n.w / 2 + 0.04, -size.h / 2 - 0.42, 0.03);
   };
 
   out.dispose = () => {

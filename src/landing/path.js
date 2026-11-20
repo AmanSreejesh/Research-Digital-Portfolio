@@ -27,11 +27,13 @@ export function rng(seed) {
   };
 }
 
-export function layoutParams(aspect) {
-  const narrow = aspect < 0.9;
-  return narrow
-    ? { column: 3.75, dz: 1.15, stack: 1.0, gap: 0.42, drift: 0.12, yaw: 0 }
-    : { column: 6.6, dz: 1.3, stack: 0.42, gap: 0.5, drift: 0.35, yaw: 0.17 };
+// Wide screens put the chat on the left and the narration on the right.
+export const isWideLayout = (w, h) => w >= 900 && w / h >= 1.1;
+
+export function layoutParams(w, h) {
+  return isWideLayout(w, h)
+    ? { wide: true, column: 4.1, dz: 1.15, stack: 0.95, gap: 0.5, drift: 0.22 }
+    : { wide: false, column: 3.95, dz: 1.1, stack: 1.0, gap: 0.45, drift: 0.1 };
 }
 
 // sizes[k] = { w, h } in world units. Returns slot centers and a curve through them.

@@ -19,7 +19,7 @@ import { measureMessage, createReadable } from './bubble.js';
 import { fillerSizes, createFiller } from './filler.js';
 import { createDust } from './dust.js';
 import { ZoomBlurEffect } from './zoomblur.js';
-import { sAt, velocityAt, flipAt, waveAt, outroAt, smoothstep } from './timeline.js';
+import { sAt, velocityAt, flipAt, waveAt, outroAt, pushAt, smoothstep } from './timeline.js';
 
 const BASE_FOV = 45;
 
@@ -77,10 +77,11 @@ export async function createScene({ container, mobile, onLost, og = false }) {
   let params = null;
   let path = null;
   let dust = null;
+  let pairY = [];
 
   const layout = () => {
-    const next = layoutParams(width / height);
-    if (params && next.column === params.column) return;
+    const next = layoutParams(width, height);
+    if (params && next.wide === params.wide) return;
     params = next;
     path = buildPath(sizes, params);
     filler.place(path, params);
@@ -89,7 +90,6 @@ export async function createScene({ container, mobile, onLost, og = false }) {
       bubbleCenter(path, r.msg.pos, r.size, params, c);
       r.base = c.clone();
       r.group.position.copy(c);
-      r.group.rotation.y = r.msg.side === 'ai' ? params.yaw : -params.yaw;
       r.placeNote(false);
     });
     if (dust) {
@@ -98,6 +98,15 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     }
     dust = createDust(path, mobile ? 150 : 300, shared);
     scene.add(dust.mesh);
+    // Vertical middle of each (student, AI) pair, so both messages stay framed.
+    pairY = [];
+    for (let j = 0; j < SLOTS; j++) {
+      const a = Math.max(0, j - 1);
+      const b = Math.max(1, j);
+      const top = path.centers[a].y + sizes[a].h / 2;
+      const bottom = path.centers[b].y - sizes[b].h / 2 - 0.3;
+      pairY.push((top + bottom) / 2);
+    }
   };
   layout();
 
@@ -124,20 +133,37 @@ export async function createScene({ container, mobile, onLost, og = false }) {
   composer.setSize(width, height, false);
 
   // ---- Camera ----
+  // Wide screens: the chat sits in the left part of the frame (the narration is on the right).
+  // Narrow screens: it sits a little low, under the narration line.
   let dist = 6;
+  let capturing = false;
+  const SHIFT_X = 0.17;
+  const SHIFT_Y = 0.075;
   const computeDistance = () => {
     const aspect = width / height;
     const t = Math.tan(THREE.MathUtils.degToRad(BASE_FOV / 2));
-    const narrow = params.column < 5;
-    const wNeed = params.column * (narrow ? 1.1 : 1.12);
-    const hNeed = narrow ? 5.2 : 4.7;
-    // The student's bubble sits about half a slot closer than the focus point, so fit the width there.
-    dist = Math.max(wNeed / 2 / (t * aspect) + params.dz * 0.5, hNeed / 2 / t);
+    if (params.wide) {
+      // The share image has no narration column, so it stays centered.
+      const sx = capturing ? 0 : SHIFT_X;
+      camera.setViewOffset(width, height, width * sx, -height * 0.045, width, height);
+      const wNeed = (params.column * 1.12) / 0.6;
+      dist = Math.max(wNeed / 2 / (t * aspect), 6.1 / 2 / t);
+      zoom.center = [0.5 - sx, 0.455];
+    } else {
+      // The narration panel covers roughly the bottom quarter, so frame the chat in the space above it.
+      camera.setViewOffset(width, height, 0, height * SHIFT_Y, width, height);
+      const wNeed = params.column * 1.06;
+      dist = Math.max(wNeed / 2 / (t * aspect), 5.4 / 0.62 / 2 / t);
+      zoom.center = [0.5, 0.5 + SHIFT_Y];
+    }
   };
   computeDistance();
 
   const focus = new THREE.Vector3();
   const look = new THREE.Vector3();
+  const camPos = new THREE.Vector3();
+  const pushCam = new THREE.Vector3();
+  const ghostWorld = new THREE.Vector3();
   const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
   const finePointer = window.matchMedia('(pointer: fine)').matches;
   const onPointer = (e) => {
@@ -148,6 +174,7 @@ export async function createScene({ container, mobile, onLost, og = false }) {
 
   // ---- State from scroll ----
   let progress = 0;
+  let lastSpot = 0;
   const start = performance.now();
   const opening = byPos[1];
 
@@ -179,15 +206,40 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     shared.uFocus.value = s;
     shared.uWave.value = waveAt(p, s);
 
-    // Camera sits behind the pair (s - 1, s) and looks slightly ahead.
+    // Camera sits behind the pair (s - 1, s), a little to the right, looking slightly ahead.
     const f = s - 0.45;
     pointAt(path, f, focus);
     pointAt(path, f + 0.6, look);
-    const narrow = params.column < 5;
-    const lift = narrow ? 0.15 : 0.55;
-    camera.position.set(focus.x * 0.6, focus.y + lift - o * 1.3, focus.z + dist);
-    look.x = focus.x * 0.6 + (look.x - focus.x) * 0.3;
-    look.y = (look.y + focus.y) / 2 - (narrow ? 0.25 : 0.2) - o * 1.3;
+    const side = params.wide ? 0.9 : 0.25;
+    const j0 = Math.min(SLOTS - 1, Math.max(0, Math.floor(s)));
+    const j1 = Math.min(SLOTS - 1, j0 + 1);
+    const cy = pairY[j0] + (pairY[j1] - pairY[j0]) * (s - Math.floor(s));
+    camPos.set(focus.x + side, cy + 0.5 - o * 1.3, focus.z + dist);
+    look.x = focus.x;
+    look.y = cy + 0.3 - o * 1.3;
+
+    // After the flip, move in on the red marker where the sign-up form used to be.
+    const k = pushAt(p);
+    shared.uSpot.value = k;
+    if (k > 0 || lastSpot > 0) {
+      // Dim the other readable messages' labels along with the bubbles.
+      readables.forEach((r) => {
+        if (r.msg.pos === 47 || r.msg.pos === 1) return;
+        r.group.children.forEach((c) => {
+          if (c.material && c.material.isMeshBasicMaterial) c.material.opacity = 1 - 0.85 * k;
+        });
+      });
+    }
+    lastSpot = k;
+    if (k > 0 && byPos[47].ghost) {
+      ghostWorld.copy(byPos[47].ghost).add(byPos[47].group.position);
+      // Aim a little below the marker so it sits above the middle and the next message stays out of frame.
+      pushCam.set(ghostWorld.x + side * 0.35, ghostWorld.y - 0.15, ghostWorld.z + dist * 0.66);
+      ghostWorld.y -= 0.4;
+      camPos.lerp(pushCam, k);
+      look.lerp(ghostWorld, k);
+    }
+    camera.position.copy(camPos);
     camera.lookAt(look);
 
     if (finePointer) {
@@ -264,21 +316,29 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     },
     // Dev helper: render one frame at 1200x630 and save it as public/og.png (only with ?og on the dev server).
     async captureOG(p = 0.735) {
-      const prev = progress;
+      const prev = { progress, width, height };
+      capturing = true;
       progress = p;
+      width = 1200;
+      height = 630;
       renderer.setPixelRatio(1);
-      renderer.setSize(1200, 630, false);
-      composer.setSize(1200, 630, false);
-      camera.aspect = 1200 / 630;
+      renderer.setSize(width, height, false);
+      composer.setSize(width, height, false);
+      camera.aspect = width / height;
+      layout();
+      computeDistance();
       apply(performance.now());
       composer.render();
       const url = renderer.domElement.toDataURL('image/png');
       await fetch('/__save-og', { method: 'POST', body: url });
-      progress = prev;
+      ({ progress, width, height } = prev);
+      capturing = false;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.5 : 2));
       renderer.setSize(width, height, false);
       composer.setSize(width, height, false);
       camera.aspect = width / height;
+      layout();
+      computeDistance();
       return 'saved public/og.png';
     },
     dispose() {

@@ -116,7 +116,7 @@ const fragment = /* glsl */ `
   uniform vec3 uAiInk;
   uniform vec3 uGreen;
   uniform vec3 uRed;
-  uniform vec3 uOrange;
+  uniform vec3 uAccent;
   uniform vec3 uKeyDir;
   uniform vec3 uRim;
   uniform vec3 uFogColor;
@@ -124,6 +124,7 @@ const fragment = /* glsl */ `
   uniform float uVelocity;
   uniform float uBevel;
   uniform float uRadius;
+  uniform float uSpot;
   #ifdef SINGLE
     uniform sampler2D uMap;
     uniform sampler2D uMapRed;
@@ -179,7 +180,7 @@ const fragment = /* glsl */ `
       vec2 q = vec2(x, ty);
       float page = box(q, vec2(0.0), vec2(tw, thumbH), aa);
       vec3 pc = vec3(0.0035);
-      pc = mix(pc, uOrange, box(q, vec2(0.0), vec2(tw, thumbH * 0.11), aa));
+      pc = mix(pc, uAccent, box(q, vec2(0.0), vec2(tw, thumbH * 0.11), aa));
       pc = mix(pc, vec3(0.028), box(q, vec2(tw * 0.06, thumbH * 0.2), vec2(tw * 0.3, thumbH * 0.46), aa));
       pc = mix(pc, vec3(0.05), box(q, vec2(tw * 0.36, thumbH * 0.22), vec2(tw * 0.9, thumbH * 0.28), aa));
       pc = mix(pc, vec3(0.03), box(q, vec2(tw * 0.36, thumbH * 0.34), vec2(tw * 0.78, thumbH * 0.39), aa));
@@ -234,6 +235,8 @@ const fragment = /* glsl */ `
 
     col += uRed * vPulse * hasStatus * 0.35;
     col *= 1.0 - 0.42 * vDim;
+    // Spotlight on message 47 while the camera moves in on the missing form.
+    col *= 1.0 - 0.8 * uSpot * (1.0 - step(abs(vInfo.z - 47.0), 0.1));
     float fd = length(vViewPos);
     float fogF = 1.0 - exp(-uFogDensity * uFogDensity * fd * fd);
     col = mix(col, uFogColor, clamp(fogF, 0.0, 1.0));
@@ -294,6 +297,7 @@ const haloFragment = /* glsl */ `
   uniform float uRadius;
   uniform float uStrength;
   uniform float uFogDensity;
+  uniform float uSpot;
   #ifdef SINGLE
     uniform float uOutlineRed;
     uniform float uStatusOn;
@@ -318,6 +322,7 @@ const haloFragment = /* glsl */ `
     float glow = exp(-max(d, 0.0) / 0.05) * smoothstep(-0.02, 0.01, d);
     float strength = mix(1.0, 1.25, redMix) * (0.75 + 0.25 * vExtra.x);
     vec3 col = mix(uGreen, uRed, redMix) * glow * uStrength * strength * (1.0 - 0.5 * vDim);
+    col *= 1.0 - 0.85 * uSpot * (1.0 - step(abs(vInfo.z - 47.0), 0.1));
     float fd = length(vViewPos);
     col *= exp(-uFogDensity * uFogDensity * fd * fd);
     gl_FragColor = vec4(col, 1.0);
@@ -334,7 +339,7 @@ export function sharedUniforms() {
     uAiInk: { value: c(COLORS.aiInk) },
     uGreen: { value: c(status.correct) },
     uRed: { value: c(status.wrong) },
-    uOrange: { value: c('#f28c28') },
+    uAccent: { value: c('#4d4d4d') },
     uKeyDir: { value: new THREE.Vector3(-0.35, 0.6, 0.72).normalize() },
     uRim: { value: c('#9fb4c8') },
     uFogColor: { value: c(COLORS.bg) },
@@ -346,6 +351,7 @@ export function sharedUniforms() {
     uBevel: { value: BEVEL },
     uRadius: { value: RADIUS + BEVEL },
     uBaseHalf: { value: 0 },
+    uSpot: { value: 0 },
   };
 }
 
@@ -371,6 +377,7 @@ export function haloMaterial(shared, { single = null, strength = 0.2 } = {}) {
     uFocus: shared.uFocus,
     uVelocity: shared.uVelocity,
     uStretch: shared.uStretch,
+    uSpot: shared.uSpot,
     uPad: { value: 0.24 },
     uStrength: { value: strength },
   };

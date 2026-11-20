@@ -4,7 +4,7 @@ Live site (after the first deploy): https://amansreejesh.github.io/Research-Digi
 
 My AP Research portfolio for 2026–27. The project measures the recovery window in AI conversations: how many turns pass between a language model's first wrong answer and the point where giving it the missing information no longer fixes the answer.
 
-The site has three pages. The home page opens with a scroll-driven 3D chat (three.js and GSAP), then explains the question. The About page covers the Personal requirement. The Process page covers Ideation, Background literature, the Concept map, the research plan and the Timeline.
+The site has three pages. The home page opens with a scroll-driven 3D chat (three.js and GSAP) that shows an AI quietly dropping a feature partway through a conversation, then explains the question. The About page covers the Personal requirement. The Process page covers Ideation, Background literature, the research plan and the Timeline.
 
 ## Running it on your computer
 
@@ -24,15 +24,17 @@ To check the version people see with reduced motion turned on (or without WebGL)
 | What | File |
 |---|---|
 | Name, email, GitHub link, site URL | `src/config.js` |
-| The landing chat messages and the green and red colors | `src/config.js` |
+| The landing chat messages, narration lines, request tracker, and the green and red colors | `src/config.js` |
+| The example chats next to "What I'm testing" | `src/home/demos.js` |
+| The recovery window walkthrough | `src/home/window-strip.js` |
 | Headline at the end of the landing sequence | `index.html` (inside `data-headline`) |
 | Home page text below the landing | `index.html` |
 | About page | `about.html` |
 | Process page text, dropped ideas, research plan, status line | `process.html` |
 | Timeline rows | `process.html`, change `data-status` to `done`, `progress` or `upcoming` |
 | The 40 sources and their APA references | `src/data/sources.json` |
-| Concept map topics, positions and paper summaries | `src/data/conceptmap.json` |
-| Colors, fonts, spacing | `src/styles/tokens.css` |
+| Colors, fonts, type sizes, spacing | `src/styles/tokens.css` |
+| The dot grid in the background | `src/common/backdrop.js` |
 
 Placeholder text is marked with `DRAFT` comments. Search the project for `DRAFT` to find every spot that still needs rewriting in my own words.
 
@@ -52,7 +54,7 @@ After deploying, open the live link in a private window and on a phone, signed o
 
 ## Link preview image
 
-`public/og.png` is a frame from the warp section. To make a new one, run `npm run dev`, open the home page with `?og` at the end of the address, then run `await __landing.scene.captureOG(0.722)` in the browser console. The number is the scroll position (0 to 1) to capture.
+`public/og.png` is the frame where the AI's mistake is revealed. To make a new one, run `npm run dev`, open the home page with `?og` at the end of the address, then run `await __landing.scene.captureOG(0.632)` in the browser console. The number is the scroll position (0 to 1) to capture.
 
 ## How the landing sequence works
 

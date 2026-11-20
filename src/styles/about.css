@@ -1,0 +1,85 @@
+/* About page */
+
+.about-head .lede {
+  max-width: 30ch;
+}
+
+.about-grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 900px) {
+  .about-grid {
+    grid-template-columns: 4fr 8fr;
+    gap: var(--gap);
+  }
+  .about-grid > .label {
+    padding-top: 0.5em;
+  }
+}
+
+.about-bio__text {
+  font-size: clamp(1.3125rem, 2.1vw, 1.75rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+}
+
+.about-bio__text p + p {
+  margin-top: 0.9em;
+}
+
+.about-into {
+  overflow: hidden;
+}
+
+.about-into__line {
+  margin: 0;
+  font-size: clamp(2.25rem, 7.5vw, 6.5rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.about-into__lead {
+  display: block;
+  color: var(--text-3);
+}
+
+.about-into__word {
+  white-space: nowrap;
+}
+
+.about-into__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.82em;
+  margin-left: 0.06em;
+  background: var(--text);
+  vertical-align: -0.06em;
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.about-contact__note {
+  font-size: var(--fs-small);
+  margin-bottom: 14px;
+}
+
+.about-contact__link {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-into__caret {
+    animation: none;
+  }
+}

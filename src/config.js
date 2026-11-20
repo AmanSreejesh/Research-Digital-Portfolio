@@ -36,7 +36,7 @@ export const script = [
   {
     pos: 0,
     side: 'user',
-    text: "can you build a website for our school's robotics club? dark background, orange accents, and it needs to look good on phones",
+    text: "can you build a website for our school's robotics club? dark background, and it needs to look good on phones",
   },
   {
     pos: 1,
@@ -91,4 +91,35 @@ export const gaps = [
   { after: 15, count: 14 },
   { after: 31, count: 14 },
   { after: 47, count: 80, spreading: true },
+];
+
+// Narration shown beside the 3D chat, one line per beat (timing is in src/landing/timeline.js).
+// The static version shows the same lines between the messages (`before` = the message they come before).
+export const captions = [
+  { id: 'start', before: 0, text: 'A student asks an AI to build a website for their robotics club.' },
+  { id: 'schedule', before: 14, text: 'They ask for a schedule page. The AI adds it and leaves everything else alone.' },
+  { id: 'form', before: 30, text: 'Next they ask for a sign-up form on the home page. The AI adds that too.' },
+  { id: 'gallery', before: 46, text: 'Then they ask for a photo gallery at the top of the home page.' },
+  {
+    id: 'mistake',
+    after: 47,
+    text: 'The AI says nothing else changed, but it deleted the sign-up form. The student never asked for that.',
+  },
+  { id: 'after', after: 47, text: 'Every reply after this one builds on the version without the form.' },
+  {
+    id: 'end',
+    after: 128,
+    text: 'The AI calls the site finished. The form has been missing for 81 messages, and the AI never noticed.',
+  },
+];
+
+// The tracker of what the student asked for. `from` is the message where they asked;
+// `lostAt` is where the AI dropped it.
+export const requests = [
+  { id: 'site', name: 'A website for the robotics club', short: 'Website', from: 0 },
+  { id: 'dark', name: 'Dark background', short: 'Dark', from: 0 },
+  { id: 'phones', name: 'Works on phones', short: 'Phones', from: 0 },
+  { id: 'schedule', name: 'Competition schedule page', short: 'Schedule', from: 14 },
+  { id: 'form', name: 'Sign-up form on the home page', short: 'Sign-up form', from: 30, lostAt: 47 },
+  { id: 'gallery', name: 'Photo gallery at the top', short: 'Gallery', from: 46 },
 ];

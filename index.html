@@ -6,6 +6,7 @@
     <!-- @head path="" -->
     <link rel="stylesheet" href="/src/styles/main.css" />
     <link rel="stylesheet" href="/src/styles/landing.css" />
+    <link rel="stylesheet" href="/src/styles/home.css" />
     <script>document.documentElement.classList.add('js')</script>
   </head>
   <body class="home">
@@ -13,12 +14,21 @@
 
     <main id="main">
       <!-- The animated opening. src/landing/index.js decides between the 3D version and the
-           static chat (reduced motion, no WebGL). The chat text itself lives in src/config.js. -->
+           static chat (reduced motion, no WebGL). The chat, narration and request list live in src/config.js. -->
       <section class="landing" id="landing" aria-label="Introduction" data-landing>
         <div class="landing__stage" data-stage>
           <div class="landing__canvas-wrap" data-canvas-wrap aria-hidden="true"></div>
           <div class="landing__preview" data-preview aria-hidden="true"></div>
           <div class="landing__veil" data-veil aria-hidden="true"></div>
+
+          <div class="story" data-story aria-hidden="true">
+            <div class="story__captions" data-captions></div>
+            <div class="story__spec">
+              <p class="story__spec-title">What the student asked for</p>
+              <ul class="spec" data-spec></ul>
+            </div>
+          </div>
+
           <div class="landing__counter" data-counter aria-hidden="true">message 1</div>
           <a class="landing__skip" href="#question" data-skip>Skip intro</a>
           <div class="landing__hint" data-hint aria-hidden="true">scroll <span>↓</span></div>
@@ -32,8 +42,8 @@
                 told it earlier. Everything it does after that is built on the mistake.
               </p>
               <p class="headline__stat" data-split>
-                In a study of more than 200,000 simulated conversations, leading AI models did 39% worse on average when
-                a task was spread over several turns instead of asked all at once. (Laban et al.,
+                In a study of more than 200,000 simulated conversations, leading LLMs did 39% worse on average when a
+                task was spread over several turns instead of asked all at once. (Laban et al.,
                 <i>LLMs Get Lost in Multi-Turn Conversation</i>, ICLR 2026)
               </p>
               <div class="headline__sign" data-split-block>
@@ -52,90 +62,160 @@
         </div>
       </section>
 
+      <!-- The question -->
       <section class="section question" id="question" aria-labelledby="question-title">
         <div class="wrap">
+          <p class="eyebrow reveal">The question</p>
           <h2 class="question__big reveal" id="question-title">
-            When an AI makes a mistake partway through a conversation, how long do you have to fix it?
+            When an LLM makes a mistake partway through a conversation, how long do you have to fix it?
           </h2>
-          <div class="grid split question__body">
-            <div class="split__aside reveal">
-              <p class="label">The research question</p>
-            </div>
-            <div class="split__main reveal">
-              <p class="question__rq">
+
+          <div class="question__grid">
+            <div class="question__rq reveal">
+              <p class="label">My research question, word for word</p>
+              <p class="question__rq-text">
                 To what extent do a language model's own prior outputs, the fragmentation of instructions across turns,
                 and user pressure each contribute to accuracy loss in multi-turn conversation, and at what point does
                 that loss become irreversible?
               </p>
-              <!-- DRAFT: rewrite in your own words -->
-              <div class="prose">
-                <p>
-                  Chatbots usually start a conversation well. The trouble comes later, once the instructions are spread
-                  across many messages and the model is building on its own earlier replies. I'm measuring how many
-                  turns pass between a model's first wrong answer and the point where even handing it the missing
-                  information no longer fixes the answer. I call that stretch the recovery window.
-                </p>
+            </div>
+            <!-- DRAFT: rewrite in your own words -->
+            <div class="question__plain reveal">
+              <p class="label">In plain terms</p>
+              <p>
+                LLMs usually start a conversation well. The trouble comes later, once the instructions are spread
+                across many messages and the model is building on its own earlier replies.
+              </p>
+              <p>
+                I'm measuring how many turns pass between a model's first wrong answer and the point where even handing
+                it the missing information no longer fixes the answer. I call that stretch the recovery window.
+              </p>
+            </div>
+          </div>
+
+          <!-- Recovery window walkthrough. Built by src/home/window-strip.js; it plays as you scroll. -->
+          <figure class="rw reveal" data-rw>
+            <div class="rw__head">
+              <p class="rw__title">The recovery window, step by step</p>
+              <p class="label">An illustration of the idea, not results</p>
+            </div>
+            <div class="rw__grid" data-rw-grid></div>
+            <figcaption class="rw__caption" data-rw-caption aria-live="polite"></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Why it matters -->
+      <section class="section matters" aria-labelledby="matters-title">
+        <div class="wrap">
+          <p class="eyebrow reveal">Why it matters</p>
+          <h2 class="h2 matters__title reveal" id="matters-title">Spreading a task across messages makes LLMs worse.</h2>
+
+          <div class="matters__grid">
+            <div class="matters__bars reveal" data-bars>
+              <p class="label">Average performance, relative to asking all at once</p>
+              <div class="bar-row">
+                <span class="bar-row__name">Asked all at once</span>
+                <span class="bar-row__track"><span class="bar-row__fill" style="--to: 100%"></span></span>
+                <span class="bar-row__val">100</span>
               </div>
+              <div class="bar-row bar-row--drop">
+                <span class="bar-row__name">Spread over several turns</span>
+                <span class="bar-row__track"><span class="bar-row__fill" style="--to: 61%"></span><span class="bar-row__gap"></span></span>
+                <span class="bar-row__val">61</span>
+              </div>
+              <p class="matters__source">
+                Laban et al., <i>LLMs Get Lost in Multi-Turn Conversation</i> (ICLR 2026), averaged across six
+                generation tasks.
+              </p>
+            </div>
+            <div class="matters__text reveal">
+              <p class="big-text">
+                People hold longer and longer conversations with LLMs, and many trust the answers without checking. If a
+                model loses track of details as a conversation goes on, the longer the task, the more likely the final
+                answer is wrong, and the person may never notice.
+              </p>
+            </div>
+          </div>
+
+          <div class="stat-row matters__stats reveal">
+            <div class="stat">
+              <span class="stat__num" data-count="39" data-suffix="%">39%</span>
+              <span class="stat__text">average drop in performance when a task was spread over several turns</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num" data-count="200000" data-format="comma" data-suffix="+">200,000+</span>
+              <span class="stat__text">simulated conversations in that study</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num" data-count="6">6</span>
+              <span class="stat__text">different generation tasks, and every model they tested got worse</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section" aria-labelledby="testing-title">
-        <div class="wrap grid split">
-          <div class="split__aside reveal">
-            <h2 class="h2" id="testing-title">What I'm testing</h2>
-          </div>
-          <div class="split__main">
-            <!-- DRAFT: rewrite in your own words -->
-            <ol class="factor-list">
-              <li class="factor reveal">
+      <!-- What I'm testing -->
+      <section class="section testing" aria-labelledby="testing-title">
+        <div class="wrap">
+          <p class="eyebrow reveal">What I'm testing</p>
+          <h2 class="h2 testing__title reveal" id="testing-title">Three explanations for why a conversation goes wrong.</h2>
+          <p class="big-text testing__intro reveal">
+            Earlier studies point at three different causes. I'm testing each one to see how much it shortens the
+            recovery window. The chats below are made-up examples of each.
+          </p>
+
+          <!-- DRAFT: rewrite in your own words -->
+          <ol class="factors">
+            <li class="factor reveal">
+              <div class="factor__text">
                 <span class="factor__num">01</span>
-                <div>
-                  <h3 class="factor__title">The AI's own earlier answers</h3>
-                  <p>
-                    Models tend to treat what they already said as settled, even when it was wrong. I'm testing whether
-                    letting a model see its earlier replies changes how long a mistake can still be fixed.
-                  </p>
-                </div>
-              </li>
-              <li class="factor reveal">
+                <h3 class="h3">The model's own earlier answers</h3>
+                <p>
+                  Models tend to treat what they already said as settled, even when it was wrong. A mistake from one
+                  turn gets reused in the next.
+                </p>
+              </div>
+              <div class="factor__demo" data-demo="own"></div>
+            </li>
+            <li class="factor reveal">
+              <div class="factor__text">
                 <span class="factor__num">02</span>
-                <div>
-                  <h3 class="factor__title">Instructions given in pieces</h3>
-                  <p>
-                    Real requests arrive across several messages, and details from early in the conversation get lost.
-                    I split each problem's instructions in different ways to see which kinds of splitting make recovery
-                    harder.
-                  </p>
-                </div>
-              </li>
-              <li class="factor reveal">
+                <h3 class="h3">Instructions given in pieces</h3>
+                <p>
+                  Real requests arrive across several messages, and details from early in the conversation get lost
+                  by the time the model answers.
+                </p>
+              </div>
+              <div class="factor__demo" data-demo="pieces"></div>
+            </li>
+            <li class="factor reveal">
+              <div class="factor__text">
                 <span class="factor__num">03</span>
-                <div>
-                  <h3 class="factor__title">Pushback from the user</h3>
-                  <p>
-                    When someone challenges an answer, a model sometimes abandons a correct answer or digs in on a wrong
-                    one. In some conversations a simulated user pushes back, so I can measure what that does to the
-                    recovery window.
-                  </p>
-                </div>
-              </li>
-            </ol>
-          </div>
+                <h3 class="h3">Pushback from the user</h3>
+                <p>
+                  When someone challenges an answer, a model sometimes drops a correct answer just because the person
+                  sounded sure.
+                </p>
+              </div>
+              <div class="factor__demo" data-demo="pushback"></div>
+            </li>
+          </ol>
         </div>
       </section>
 
-      <section class="section" aria-label="More pages">
+      <section class="section onward-section" aria-label="More pages">
         <div class="wrap">
           <div class="onward">
-            <a class="onward__link reveal" href="./about.html">
-              <span>About me</span>
-              <span>Who I am and how I got interested in AI reliability.</span>
-            </a>
             <a class="onward__link reveal" href="./process.html">
-              <span>Process</span>
-              <span>How I chose the question and how I'm planning to answer it.</span>
+              <span class="label">Next</span>
+              <span class="onward__name">Process</span>
+              <span class="onward__desc">How I chose the question and how I'm planning to answer it.</span>
+            </a>
+            <a class="onward__link reveal" href="./about.html">
+              <span class="label">Also</span>
+              <span class="onward__name">About me</span>
+              <span class="onward__desc">A short bio and how to reach me.</span>
             </a>
           </div>
         </div>

@@ -29,7 +29,7 @@ export function head({ title, description, path = '' }) {
     <meta property="og:image" content="${esc(site.url)}og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="A long AI chat conversation in 3D, with green replies turning red partway through." />
+    <meta property="og:image:alt" content="An AI chat reply outlined in red that claims nothing else changed, above a website preview where a red box marks the missing sign-up form." />
     <meta name="twitter:card" content="summary_large_image" />`;
 }
 

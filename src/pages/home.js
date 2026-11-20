@@ -1,13 +1,16 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { initNav } from '../common/nav.js';
-import { initReveal } from '../common/reveal.js';
+import { boot, initReveal } from '../common/boot.js';
 import { initSmooth } from '../common/smooth.js';
 import { initLanding } from '../landing/index.js';
+import { initWindowStrip } from '../home/window-strip.js';
+import { initDemos } from '../home/demos.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-initNav();
+boot();
 initSmooth({ gsap, ScrollTrigger });
 initLanding();
+initWindowStrip();
+initDemos();
 initReveal();
