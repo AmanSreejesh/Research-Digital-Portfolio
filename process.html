@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- @head title="Process" path="process.html" description="How Aman Sreejesh chose his AP Research question, what earlier studies found, and how he plans to measure the recovery window in AI conversations." -->
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script>document.documentElement.classList.add('js')</script>
+  </head>
+  <body>
+    <!-- @header current="process" -->
+
+    <main id="main" class="page-main">
+      <section class="page-head">
+        <div class="wrap">
+          <h1 class="page-title reveal">Process</h1>
+          <!-- DRAFT: rewrite in your own words -->
+          <p class="lede reveal">
+            How the project went from a broad interest in AI reliability to a specific question, and how I'm planning
+            to answer it.
+          </p>
+          <nav class="process-index-mobile" aria-label="Sections on this page">
+            <a href="#topic">01 How I chose the topic</a>
+            <a href="#known">02 What's already known</a>
+            <a href="#map">03 How the ideas connect</a>
+            <a href="#plan">04 The research plan</a>
+            <a href="#timeline">05 Timeline</a>
+          </nav>
+        </div>
+      </section>
+
+      <div class="wrap process-layout">
+        <nav class="process-index" aria-label="Sections on this page">
+          <ol data-index>
+            <li><a href="#topic"><span>01</span><span>How I chose the topic</span></a></li>
+            <li><a href="#known"><span>02</span><span>What's already known</span></a></li>
+            <li><a href="#map"><span>03</span><span>How the ideas connect</span></a></li>
+            <li><a href="#plan"><span>04</span><span>The research plan</span></a></li>
+            <li><a href="#timeline"><span>05</span><span>Timeline</span></a></li>
+          </ol>
+        </nav>
+
+        <div class="process-sections">
+          <!-- 01 · Ideation -->
+          <section class="psection" id="topic" aria-labelledby="topic-title">
+            <span class="psection__num reveal">01 · Ideation</span>
+            <h2 class="psection__title reveal" id="topic-title">How I chose the topic</h2>
+            <!-- DRAFT: rewrite in your own words -->
+            <div class="prose reveal">
+              <p>
+                I spent the summer and the start of the fall looking for a topic. I wanted a real machine learning
+                question that I could run on my own computer, and I went through a lot of ideas before one fit.
+              </p>
+            </div>
+
+            <div class="two-col">
+              <div class="reveal">
+                <h3>What I was looking for</h3>
+                <ul class="plain-list">
+                  <li>A real machine learning problem about how AI itself behaves, not an AI app for some industry</li>
+                  <li>One clear failure to study, with one main thing to vary and real baselines to compare against</li>
+                  <li>Something I could explain in one sentence to someone who doesn't work with AI</li>
+                  <li>Enough published research around it to build on, but a specific question nobody has answered yet</li>
+                  <li>Doable with public data and open models on my own computer</li>
+                </ul>
+              </div>
+              <div class="reveal">
+                <h3>Ideas I dropped</h3>
+                <!-- DRAFT: topics without a reason are waiting for your reason in your own words. Add it as
+                     <span class="dropped__why">...</span> under the topic. -->
+                <ul class="dropped">
+                  <li><span class="dropped__topic">Benchmarking Python dataframe libraries</span></li>
+                  <li><span class="dropped__topic">Behavior drift in deployed AI models</span></li>
+                  <li>
+                    <span class="dropped__topic">AI tutoring applications</span>
+                    <span class="dropped__why">An AI app for one field, not a question about how AI itself works</span>
+                  </li>
+                  <li><span class="dropped__topic">How quantization affects a model's memory of rare facts</span></li>
+                  <li>
+                    <span class="dropped__topic">AI visual assistants</span>
+                    <span class="dropped__why">Turned into several ideas stitched together instead of one question</span>
+                  </li>
+                  <li><span class="dropped__topic">Preserving dissenting views in AI meeting summaries</span></li>
+                  <li><span class="dropped__topic">Safeguards for AI-generated code optimizations</span></li>
+                  <li><span class="dropped__topic">Committees of AI judges</span></li>
+                  <li>
+                    <span class="dropped__topic">Very narrow "gap in one benchmark" topics</span>
+                    <span class="dropped__why">Too narrow to matter outside one benchmark</span>
+                  </li>
+                  <li>
+                    <span class="dropped__topic"
+                      >A final shortlist: why probes trained on one model fail on another, noise from how benchmarks are
+                      served, and comparing reasoning methods at equal compute</span
+                    >
+                    <span class="dropped__why">Each one was too hard to explain in one sentence to someone outside the field</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="landed reveal">
+              <h3>Where I landed</h3>
+              <!-- DRAFT: rewrite in your own words -->
+              <div class="prose">
+                <p>
+                  I settled on measuring when a mistake in a conversation becomes permanent. The paper that got me
+                  there was Laban et al.'s <em>LLMs Get Lost in Multi-Turn Conversation</em>, which found that once a
+                  model takes a wrong turn, it gets lost and doesn't recover. That made me wonder whether recovery
+                  stops being possible at a specific point, and whether that point can be measured. I call the stretch
+                  between the first error and that point the recovery window.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 02 · Background Lit -->
+          <section class="psection" id="known" aria-labelledby="known-title">
+            <span class="psection__num reveal">02 · Background literature</span>
+            <h2 class="psection__title reveal" id="known-title">What's already known</h2>
+            <!-- DRAFT: rewrite in your own words -->
+            <div class="prose reveal">
+              <p>
+                Before designing anything, I collected and summarized 40 sources across five categories, then wrote a
+                literature review around the 25 most relevant ones. The research falls into three groups.
+              </p>
+            </div>
+
+            <ol class="themes">
+              <li class="theme reveal">
+                <span class="theme__num">1</span>
+                <div>
+                  <h3>Conversations make models worse</h3>
+                  <p>
+                    Laban et al. found a 39% average drop across more than 200,000 simulated conversations. Most of
+                    that drop came from models becoming less consistent, while their best-case ability barely changed.
+                    Other teams found similar drops on different kinds of tasks, and studies using survival analysis
+                    model the turn where a model first fails.
+                  </p>
+                </div>
+              </li>
+              <li class="theme reveal">
+                <span class="theme__num">2</span>
+                <div>
+                  <h3>There are three competing explanations</h3>
+                  <p>
+                    A model's own earlier answers may mislead it, instructions given in pieces may get misread, and
+                    user pushback may make it cave. The studies disagree with each other, and each one used different
+                    tasks and different measurements.
+                  </p>
+                </div>
+              </li>
+              <li class="theme reveal">
+                <span class="theme__num">3</span>
+                <div>
+                  <h3>Models rarely fix themselves</h3>
+                  <p>
+                    Even when a model seems to register a mistake internally, it usually doesn't correct it. Giving it
+                    outside help only brings part of the accuracy back.
+                  </p>
+                </div>
+              </li>
+            </ol>
+
+            <!-- DRAFT: rewrite in your own words -->
+            <p class="gap-statement reveal">
+              Existing work measures whether a model is wrong at a given moment. It hasn't measured how long after a
+              mistake the conversation can still be repaired, or which of the three explanations shortens that time.
+            </p>
+
+            <div class="library reveal" id="sources">
+              <div class="library__head">
+                <h3>Source library</h3>
+                <span class="label" data-source-count>40 sources</span>
+              </div>
+              <div class="filters" role="group" aria-label="Filter sources by category" data-filters></div>
+              <ol class="sources" data-sources aria-live="polite"></ol>
+              <details class="apa" id="references">
+                <summary>Full reference list (APA 7)</summary>
+                <ol data-apa></ol>
+              </details>
+            </div>
+          </section>
+
+          <!-- 03 · Concept Map -->
+          <section class="psection" id="map" aria-labelledby="map-title">
+            <span class="psection__num reveal">03 · Concept map</span>
+            <h2 class="psection__title reveal" id="map-title">How the ideas connect</h2>
+            <!-- DRAFT: rewrite in your own words -->
+            <div class="prose reveal">
+              <p>
+                I sorted the papers from my literature review by what they say about the recovery window. Select a
+                topic to see the papers behind it.
+              </p>
+            </div>
+            <div class="cmap reveal" data-cmap>
+              <div class="cmap__svg-wrap" data-cmap-svg></div>
+              <aside class="cmap__panel" data-cmap-panel aria-live="polite"></aside>
+            </div>
+            <div class="cmap-mobile" data-cmap-mobile></div>
+            <p class="caption reveal">
+              Built from my literature review. Dashed lines mark studies that disagree with or complicate the others.
+            </p>
+          </section>
+
+          <!-- 04 · Methodology -->
+          <section class="psection" id="plan" aria-labelledby="plan-title">
+            <span class="psection__num reveal">04 · Methodology</span>
+            <h2 class="psection__title reveal" id="plan-title">The research plan</h2>
+            <!-- DRAFT: rewrite in your own words -->
+            <div class="prose reveal">
+              <p>
+                In plain terms, the question is this: once a model makes a mistake in a conversation, how many turns
+                do you have to fix it? My hypothesis is that the longer a mistake stays in a conversation, the less
+                likely it is that giving the model the right information will fix it.
+              </p>
+            </div>
+
+            <ol class="steps">
+              <li class="step reveal">
+                <span class="step__num">1</span>
+                <div>
+                  <h3>Tasks</h3>
+                  <p>
+                    I'm using math and coding problems because a program can check the answers, either with unit
+                    tests or an exact numeric match. No AI model grades another model's work.
+                  </p>
+                </div>
+              </li>
+              <li class="step reveal">
+                <span class="step__num">2</span>
+                <div>
+                  <h3>Screening</h3>
+                  <p>
+                    I only keep problems that every model solves at least 90% of the time when the whole problem is
+                    asked at once. That way a wrong answer later in a conversation can't just mean the model was never
+                    able to solve it.
+                  </p>
+                </div>
+              </li>
+              <li class="step reveal">
+                <span class="step__num">3</span>
+                <div>
+                  <h3>Models</h3>
+                  <p>
+                    The models are small open-weight models that run locally on my own computer. Running them myself
+                    means I control every setting.
+                  </p>
+                </div>
+              </li>
+              <li class="step reveal">
+                <span class="step__num">4</span>
+                <div>
+                  <h3>Three things I vary</h3>
+                  <p>
+                    Each problem's instructions are split across several turns. Between conditions I change whether
+                    the model can see its own earlier replies, how the instructions are broken up, and whether a
+                    simulated user pushes back.
+                  </p>
+                </div>
+              </li>
+              <li class="step step--probe reveal">
+                <span class="step__num">5</span>
+                <div class="step__body">
+                  <div>
+                    <h3>The repair probe</h3>
+                    <p>
+                      At each turn after the model's first error, I copy the conversation, give the copy the correct
+                      missing information, and ask again. If even the repaired copy gets it wrong, the conversation
+                      has passed the point of no return. The real conversation keeps going untouched.
+                    </p>
+                  </div>
+                  <figure class="probe-figure">
+                    <div data-probe></div>
+                    <figcaption class="caption">How the repair probe works. This is an illustration, not results.</figcaption>
+                  </figure>
+                </div>
+              </li>
+              <li class="step reveal">
+                <span class="step__num">6</span>
+                <div>
+                  <h3>What I measure</h3>
+                  <p>
+                    The recovery window is the number of turns between the first error and the first failed repair.
+                    Each probe will be sampled three times, and I'll report results at horizons of 3, 5 and 8 turns,
+                    since "irreversible" can only ever mean the conversation didn't recover within that many turns.
+                  </p>
+                </div>
+              </li>
+            </ol>
+
+            <!-- DRAFT: update this whenever the project moves forward -->
+            <p class="status-line reveal">
+              <span class="label">Where things stand · November 2026</span>
+              The plan is set, and I'm building the code that runs the test conversations now. I haven't run any tests
+              yet, so there are no results on this site.
+            </p>
+          </section>
+
+          <!-- 05 · Timeline -->
+          <section class="psection" id="timeline" aria-labelledby="timeline-title">
+            <span class="psection__num reveal">05 · Timeline</span>
+            <h2 class="psection__title reveal" id="timeline-title">Timeline</h2>
+            <div class="prose reveal">
+              <p>The schedule I'm working from. I'll move the markers as the work gets done.</p>
+            </div>
+
+            <!-- To update a row, change data-status to done, progress or upcoming. -->
+            <div class="timeline reveal">
+              <p class="timeline__group">So far</p>
+              <ol>
+                <li class="trow" data-status="done"><span class="trow__when">Summer 2026</span><span class="trow__goal">Picked the topic</span></li>
+                <li class="trow" data-status="done"><span class="trow__when">Fall 2026</span><span class="trow__goal">Built the 40-source annotated list</span></li>
+                <li class="trow" data-status="done"><span class="trow__when">Fall 2026</span><span class="trow__goal">Wrote the research plan</span></li>
+                <li class="trow" data-status="done"><span class="trow__when">Fall 2026</span><span class="trow__goal">Wrote the introduction and a first draft of the literature review</span></li>
+                <li class="trow" data-status="progress"><span class="trow__when">Now</span><span class="trow__goal">Choose the models and tasks, and build the code that runs the test conversations</span></li>
+              </ol>
+
+              <p class="timeline__group">Before the science fair</p>
+              <ol>
+                <li class="trow" data-status="upcoming"><span class="trow__when">Next</span><span class="trow__goal">Pilot run on one model, then full trials on three models</span></li>
+                <li class="trow" data-status="upcoming"><span class="trow__when">December</span><span class="trow__goal">Clean the data and measure the recovery window for each condition</span></li>
+                <li class="trow" data-status="upcoming"><span class="trow__when">December</span><span class="trow__goal">Make graphs and the science fair board</span></li>
+                <li class="trow" data-status="upcoming"><span class="trow__when">Dec 17</span><span class="trow__goal">Present at the school science and engineering fair</span></li>
+              </ol>
+
+              <p class="timeline__group">Spring 2027</p>
+              <ol>
+                <li class="trow" data-status="upcoming"><span class="trow__when">Spring 2027</span><span class="trow__goal">Tests on larger models and sensitivity checks</span></li>
+                <li class="trow" data-status="upcoming"><span class="trow__when">Spring 2027</span><span class="trow__goal">Write the results and discussion, then finish the final paper</span></li>
+                <li class="trow" data-status="upcoming"><span class="trow__when">Spring 2027</span><span class="trow__goal">Presentation and defense</span></li>
+              </ol>
+
+              <div class="timeline-legend label" aria-hidden="true">
+                <span class="trow__status"><span class="dot dot--done"></span>done</span>
+                <span class="trow__status"><span class="dot dot--progress"></span>in progress</span>
+                <span class="trow__status"><span class="dot"></span>upcoming</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- @footer -->
+    <script type="module" src="/src/pages/process.js"></script>
+  </body>
+</html>

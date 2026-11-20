@@ -1,0 +1,357 @@
+/* Landing sequence: 3D stage, its overlays, and the static chat used for
+   reduced motion, no WebGL, and screen readers. */
+
+.landing {
+  position: relative;
+  background: var(--bg);
+}
+
+.landing__stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.landing__canvas-wrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-out);
+}
+
+.landing__canvas-wrap.is-ready {
+  opacity: 1;
+}
+
+.landing__canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.landing__veil {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing__counter,
+.landing__skip,
+.landing__hint {
+  position: absolute;
+  z-index: 3;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.landing__counter {
+  top: calc(var(--header-h) + 16px);
+  left: var(--gutter);
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.landing__skip {
+  top: calc(var(--header-h) + 16px);
+  right: var(--gutter);
+  color: var(--text-2);
+}
+
+.landing__hint {
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-2);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.landing__hint span {
+  display: inline-block;
+  animation: hint-bob 2.4s var(--ease-out) infinite;
+}
+
+@keyframes hint-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* While three.js loads: the first exchange as plain HTML. */
+.landing__preview {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--header-h) + 40px) var(--gutter) 80px;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.landing__preview.is-hidden {
+  opacity: 0;
+}
+
+.landing__preview .chat-static {
+  width: 100%;
+  max-width: 640px;
+}
+
+/* Headline over the canvas at the end of the sequence. */
+.landing__headline {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 0 0 clamp(48px, 9vh, 96px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.landing__headline.is-visible {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.headline__title {
+  font-size: clamp(2.25rem, 5.6vw, 4.75rem);
+  line-height: 1.02;
+  max-width: 17ch;
+}
+
+.headline__body {
+  margin-top: 28px;
+  font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+  line-height: 1.5;
+  max-width: 50ch;
+}
+
+.headline__stat {
+  margin-top: 20px;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  max-width: 62ch;
+}
+
+.headline__sign {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 28px;
+}
+
+.headline__name {
+  font-weight: 500;
+  font-size: 1.125rem;
+}
+
+.headline__course {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+
+.headline__link {
+  font-size: 1rem;
+}
+
+@media (min-width: 900px) {
+  .headline__sign .headline__link {
+    margin-left: auto;
+  }
+}
+
+/* SplitText lines */
+.split-line {
+  display: block;
+}
+
+/* ---------- Modes ---------- */
+
+.landing.is-3d .landing__static {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.landing.is-static .landing__stage {
+  display: none;
+}
+
+.landing.is-static .landing__static {
+  padding: calc(var(--header-h) + 64px) 0 var(--section-y);
+}
+
+.landing.is-static .landing__headline {
+  position: static;
+  visibility: visible;
+  pointer-events: auto;
+  padding: 72px 0 0;
+}
+
+.landing.is-static .landing__headline .wrap {
+  padding: 0;
+}
+
+/* ---------- Static chat ---------- */
+
+.chat-static {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 680px;
+  font-family: var(--font-chat);
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 88%;
+}
+
+.msg__num {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+
+.msg__bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.msg--user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.msg--user .msg__bubble {
+  background: var(--text);
+  color: #111;
+  border-bottom-right-radius: 6px;
+}
+
+.msg--ai {
+  align-self: flex-start;
+}
+
+.msg--ai .msg__bubble {
+  background: #1a1a1a;
+  color: var(--text);
+  border: 1px solid var(--hairline);
+  border-bottom-left-radius: 6px;
+}
+
+.msg--ai[data-status='correct'] .msg__bubble {
+  border-color: var(--correct);
+}
+
+.msg--ai[data-status='wrong'] .msg__bubble {
+  border-color: var(--wrong);
+}
+
+.msg__bubble p {
+  margin: 0;
+}
+
+.msg__hl {
+  color: var(--wrong);
+}
+
+.msg__thumb {
+  margin-top: 12px;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 6px;
+}
+
+.msg__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.msg__status::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.msg--ai[data-status='correct'] .msg__status {
+  color: var(--correct);
+}
+
+.msg--ai[data-status='wrong'] .msg__status {
+  color: var(--wrong);
+}
+
+.msg__note {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--wrong);
+}
+
+.gap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 18px 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-2);
+}
+
+.gap::before,
+.gap::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
+}
+
+.gap--correct::before,
+.gap--correct::after {
+  background: color-mix(in srgb, var(--correct) 45%, transparent);
+}
+
+/* After the mistake: the divider fades from green to red. */
+.gap--spreading::before {
+  background: linear-gradient(90deg, var(--correct), color-mix(in srgb, var(--correct) 30%, var(--wrong)));
+}
+
+.gap--spreading::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--correct) 30%, var(--wrong)), var(--wrong));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing__hint span {
+    animation: none;
+  }
+  .landing__canvas-wrap,
+  .landing__preview {
+    transition: none;
+  }
+}

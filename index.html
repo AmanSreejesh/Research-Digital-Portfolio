@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- @head path="" -->
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <link rel="stylesheet" href="/src/styles/landing.css" />
+    <script>document.documentElement.classList.add('js')</script>
+  </head>
+  <body class="home">
+    <!-- @header current="home" -->
+
+    <main id="main">
+      <!-- The animated opening. src/landing/index.js decides between the 3D version and the
+           static chat (reduced motion, no WebGL). The chat text itself lives in src/config.js. -->
+      <section class="landing" id="landing" aria-label="Introduction" data-landing>
+        <div class="landing__stage" data-stage>
+          <div class="landing__canvas-wrap" data-canvas-wrap aria-hidden="true"></div>
+          <div class="landing__preview" data-preview aria-hidden="true"></div>
+          <div class="landing__veil" data-veil aria-hidden="true"></div>
+          <div class="landing__counter" data-counter aria-hidden="true">message 1</div>
+          <a class="landing__skip" href="#question" data-skip>Skip intro</a>
+          <div class="landing__hint" data-hint aria-hidden="true">scroll <span>↓</span></div>
+
+          <!-- Headline. Edit the text here. -->
+          <div class="landing__headline" data-headline>
+            <div class="wrap">
+              <h1 class="headline__title" data-split>Most AI mistakes don't happen at the start of a conversation.</h1>
+              <p class="headline__body" data-split>
+                They show up later, after you've changed your mind a few times and the AI loses track of something you
+                told it earlier. Everything it does after that is built on the mistake.
+              </p>
+              <p class="headline__stat" data-split>
+                In a study of more than 200,000 simulated conversations, leading AI models did 39% worse on average when
+                a task was spread over several turns instead of asked all at once. (Laban et al.,
+                <i>LLMs Get Lost in Multi-Turn Conversation</i>, ICLR 2026)
+              </p>
+              <div class="headline__sign" data-split-block>
+                <span class="headline__name">Aman Sreejesh</span>
+                <span class="headline__course">AP Research, 2026–27</span>
+                <a href="#question" class="headline__link" data-to-question>See how I'm studying it</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="landing__static" data-static-wrap>
+          <div class="wrap">
+            <ol class="chat-static" data-static aria-label="An example conversation with an AI"></ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="section question" id="question" aria-labelledby="question-title">
+        <div class="wrap">
+          <h2 class="question__big reveal" id="question-title">
+            When an AI makes a mistake partway through a conversation, how long do you have to fix it?
+          </h2>
+          <div class="grid split question__body">
+            <div class="split__aside reveal">
+              <p class="label">The research question</p>
+            </div>
+            <div class="split__main reveal">
+              <p class="question__rq">
+                To what extent do a language model's own prior outputs, the fragmentation of instructions across turns,
+                and user pressure each contribute to accuracy loss in multi-turn conversation, and at what point does
+                that loss become irreversible?
+              </p>
+              <!-- DRAFT: rewrite in your own words -->
+              <div class="prose">
+                <p>
+                  Chatbots usually start a conversation well. The trouble comes later, once the instructions are spread
+                  across many messages and the model is building on its own earlier replies. I'm measuring how many
+                  turns pass between a model's first wrong answer and the point where even handing it the missing
+                  information no longer fixes the answer. I call that stretch the recovery window.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="testing-title">
+        <div class="wrap grid split">
+          <div class="split__aside reveal">
+            <h2 class="h2" id="testing-title">What I'm testing</h2>
+          </div>
+          <div class="split__main">
+            <!-- DRAFT: rewrite in your own words -->
+            <ol class="factor-list">
+              <li class="factor reveal">
+                <span class="factor__num">01</span>
+                <div>
+                  <h3 class="factor__title">The AI's own earlier answers</h3>
+                  <p>
+                    Models tend to treat what they already said as settled, even when it was wrong. I'm testing whether
+                    letting a model see its earlier replies changes how long a mistake can still be fixed.
+                  </p>
+                </div>
+              </li>
+              <li class="factor reveal">
+                <span class="factor__num">02</span>
+                <div>
+                  <h3 class="factor__title">Instructions given in pieces</h3>
+                  <p>
+                    Real requests arrive across several messages, and details from early in the conversation get lost.
+                    I split each problem's instructions in different ways to see which kinds of splitting make recovery
+                    harder.
+                  </p>
+                </div>
+              </li>
+              <li class="factor reveal">
+                <span class="factor__num">03</span>
+                <div>
+                  <h3 class="factor__title">Pushback from the user</h3>
+                  <p>
+                    When someone challenges an answer, a model sometimes abandons a correct answer or digs in on a wrong
+                    one. In some conversations a simulated user pushes back, so I can measure what that does to the
+                    recovery window.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-label="More pages">
+        <div class="wrap">
+          <div class="onward">
+            <a class="onward__link reveal" href="./about.html">
+              <span>About me</span>
+              <span>Who I am and how I got interested in AI reliability.</span>
+            </a>
+            <a class="onward__link reveal" href="./process.html">
+              <span>Process</span>
+              <span>How I chose the question and how I'm planning to answer it.</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- @footer -->
+    <script type="module" src="/src/pages/home.js"></script>
+  </body>
+</html>

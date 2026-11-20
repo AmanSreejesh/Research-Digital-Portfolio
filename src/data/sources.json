@@ -1,0 +1,322 @@
+[
+  {
+    "category": "Foundations",
+    "title": "LLMs Get Lost In Multi-Turn Conversation",
+    "authors": "Philippe Laban, Hiroaki Hayashi, Yingbo Zhou, Jennifer Neville",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2505.06120",
+    "apa": "Laban, P., Hayashi, H., Zhou, Y., & Neville, J. (2025). *LLMs get lost in multi-turn conversation* (arXiv:2505.06120). arXiv. https://doi.org/10.48550/arXiv.2505.06120"
+  },
+  {
+    "category": "Foundations",
+    "title": "Intent Mismatch Causes LLMs to Get Lost in Multi-Turn Conversation",
+    "authors": "Geng Liu, Fei Zhu, Rong Feng, Changyi Ma, Shiqi Wang, Gaofeng Meng",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2602.07338",
+    "apa": "Liu, G., Zhu, F., Feng, R., Ma, C., Wang, S., & Meng, G. (2026). *Intent mismatch causes LLMs to get lost in multi-turn conversation* (arXiv:2602.07338). arXiv. https://doi.org/10.48550/arXiv.2602.07338"
+  },
+  {
+    "category": "Foundations",
+    "title": "Stop Listening to Me! How Multi-turn Conversations Can Degrade LLM Reliability",
+    "authors": "Kevin H. Guo, Chao Yan, Avinash Baidya, Katherine Brown, Xiang Gao, Juming Xiong, Zhijun Yin, Bradley A. Malin",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2603.11394",
+    "apa": "Guo, K. H., Yan, C., Baidya, A., Brown, K., Gao, X., Xiong, J., Yin, Z., & Malin, B. A. (2026b). *Stop listening to me! How multi-turn conversations can degrade LLM reliability* (arXiv:2603.11394). arXiv. https://doi.org/10.48550/arXiv.2603.11394"
+  },
+  {
+    "category": "Foundations",
+    "title": "Do LLMs Benefit From Their Own Words?",
+    "authors": "Jenny Y. Huang, Leshem Choshen, Wei Sun, Omar Khattab, Ramón Fernandez Astudillo, Mehul Damani, Tamara Broderick, Jacob Andreas",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2602.24287",
+    "apa": "Huang, J. Y., Choshen, L., Sun, W., Khattab, O., Fernandez Astudillo, R., Damani, M., Broderick, T., & Andreas, J. (2026). *Do LLMs benefit from their own words?* (arXiv:2602.24287). arXiv. https://doi.org/10.48550/arXiv.2602.24287"
+  },
+  {
+    "category": "Foundations",
+    "title": "Beyond Single-Turn: A Survey on Multi-Turn Interactions with Large Language Models",
+    "authors": "Yubo Li, Xiaobin Shen, Yidi Miao, Xinyu Yao, Xueying Ding, Ramayya Krishnan, Rema Padman",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2504.04717",
+    "apa": "Li, Y., Shen, X., Miao, Y., Yao, X., Ding, X., Krishnan, R., & Padman, R. (2025). *Beyond single-turn: A survey on multi-turn interactions with large language models* (arXiv:2504.04717). arXiv. https://doi.org/10.48550/arXiv.2504.04717"
+  },
+  {
+    "category": "Foundations",
+    "title": "Beyond Continuity: Challenges of Context Switching in Multi-Turn Dialogue with LLMs",
+    "authors": "Aditya Sinha, Harald Steck, Vito Ostuni, Matteo Rinaldi",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2605.09268",
+    "apa": "Sinha, A., Steck, H., Ostuni, V., & Rinaldi, M. (2026). *Beyond continuity: Challenges of context switching in multi-turn dialogue with LLMs* (arXiv:2605.09268). arXiv. https://doi.org/10.48550/arXiv.2605.09268"
+  },
+  {
+    "category": "Foundations",
+    "title": "Hy-MultiTurn: A Six-Dimensional Benchmark for Deep Multi-Turn Dialogue Understanding",
+    "authors": "Eileen Ye, Jiawen Tao, Yaoming Li, Chenxu Liu, Wenhan Yu, Yaxin Fan, Xiaokun Yuan, Mengzhou Wu, Yanbing Jiang, Maxm Pan",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2607.29196",
+    "apa": "Ye, E., Tao, J., Li, Y., Liu, C., Yu, W., Fan, Y., Yuan, X., Wu, M., Jiang, Y., & Pan, M. (2026). *Hy-MultiTurn: A six-dimensional benchmark for deep multi-turn dialogue understanding* (arXiv:2607.29196). arXiv. https://doi.org/10.48550/arXiv.2607.29196"
+  },
+  {
+    "category": "Foundations",
+    "title": "Evaluating Language Models in Realistic Conversational Contexts",
+    "authors": "Ilija Subasic, Andrew Rabinovich, Zhao Chen",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2608.26131",
+    "apa": "Subasic, I., Rabinovich, A., & Chen, Z. (2026). *Evaluating language models in realistic conversational contexts* (arXiv:2608.26131). arXiv. https://doi.org/10.48550/arXiv.2608.26131"
+  },
+  {
+    "category": "Methodology",
+    "title": "Time-To-Inconsistency: A Survival Analysis of Large Language Model Robustness to Adversarial Attacks",
+    "authors": "Yubo Li, Ramayya Krishnan, Rema Padman",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2510.02712",
+    "apa": "Li, Y., Krishnan, R., & Padman, R. (2025). *Time-to-inconsistency: A survival analysis of large language model robustness to adversarial attacks* (arXiv:2510.02712). arXiv. https://doi.org/10.48550/arXiv.2510.02712"
+  },
+  {
+    "category": "Methodology",
+    "title": "Measuring the Unmeasurable: Markov Chain Reliability for LLM Agents",
+    "authors": "Phat T. Tran-Truong, Xuan-Bach Le",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2604.24579",
+    "apa": "Tran-Truong, P. T., & Le, X.-B. (2026). *Measuring the unmeasurable: Markov chain reliability for LLM agents* (arXiv:2604.24579). arXiv. https://doi.org/10.48550/arXiv.2604.24579"
+  },
+  {
+    "category": "Methodology",
+    "title": "Modeling Memory-Dependent Reliability of LLMs: A Hidden Markov Model",
+    "authors": "Robab Aghazadeh Chakherlou, Siddartha Khastgir, Peter Popov, Xingyu Zhao",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2607.22951",
+    "apa": "Chakherlou, R. A., Khastgir, S., Popov, P., & Zhao, X. (2026). *Modeling memory-dependent reliability of LLMs: A hidden Markov model* (arXiv:2607.22951). arXiv. https://doi.org/10.48550/arXiv.2607.22951"
+  },
+  {
+    "category": "Methodology",
+    "title": "Quantifying LLM Safety Degradation Under Repeated Attacks Using Survival Analysis",
+    "authors": "Zvi Topol",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2605.12869",
+    "apa": "Topol, Z. (2026). *Quantifying LLM safety degradation under repeated attacks using survival analysis* (arXiv:2605.12869). arXiv. https://doi.org/10.48550/arXiv.2605.12869"
+  },
+  {
+    "category": "Methodology",
+    "title": "A Survey on LLM-Based Conversational User Simulation",
+    "authors": "Bo Ni, Yu Wang, Leyao Wang, Branislav Kveton, Franck Dernoncourt, Yu Xia, Hongjie Chen, Reuben Luera, Samyadeep Basu, Subhojyoti Mukherjee, Puneet Mathur, Nesreen K. Ahmed, Junda Wu, Li Li, Huixin Zhang, Ruiyi Zhang, Tong Yu, Sungchul Kim, Jiuxiang Gu, Zhengzhong Tu, Alexa Siu, Zichao Wang, Seunghyun Yoon, Nedim Lipka, Namyong Park, Zihao Lin, Trung Bui, Yue Zhao, Tyler Derr, Ryan A. Rossi",
+    "year": "2026",
+    "url": "https://aclanthology.org/2026.eacl-long.200/",
+    "apa": "Ni, B., Wang, Y., Wang, L., Kveton, B., Dernoncourt, F., Xia, Y., Chen, H., Luera, R., Basu, S., Mukherjee, S., Mathur, P., Ahmed, N. K., Wu, J., Li, L., Zhang, H., Zhang, R., Yu, T., Kim, S., Gu, J., . . . Rossi, R. A. (2026). A survey on LLM-based conversational user simulation. In *Proceedings of the 19th Conference of the European Chapter of the Association for Computational Linguistics (Volume 1: Long Papers)* (pp. 4266–4301). Association for Computational Linguistics. https://doi.org/10.18653/v1/2026.eacl-long.200"
+  },
+  {
+    "category": "Methodology",
+    "title": "Towards Self-Improving Error Diagnosis in Multi-Agent Systems",
+    "authors": "Jiazheng Li, Emine Yilmaz, Bei Chen, Thu Le",
+    "year": "2026",
+    "url": "https://aclanthology.org/2026.findings-acl.98/",
+    "apa": "Li, J., Yilmaz, E., Chen, B., & Le, T. (2026). Towards self-improving error diagnosis in multi-agent systems. In *Findings of the Association for Computational Linguistics: ACL 2026* (pp. 2063–2077). Association for Computational Linguistics. https://doi.org/10.18653/v1/2026.findings-acl.98"
+  },
+  {
+    "category": "Methodology",
+    "title": "Quantifying Ranking Uncertainty in LLM Benchmarks",
+    "authors": "Bitya Neuhof, Yuval Benjamini",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2607.16259",
+    "apa": "Neuhof, B., & Benjamini, Y. (2026). *Quantifying ranking uncertainty in LLM benchmarks* (arXiv:2607.16259). arXiv. https://doi.org/10.48550/arXiv.2607.16259"
+  },
+  {
+    "category": "Methodology",
+    "title": "Understanding and Mitigating Numerical Sources of Nondeterminism in LLM Inference",
+    "authors": "Jiayi Yuan, Hao Li, Xinheng Ding, Wenya Xie, Yu-Jhe Li, Wentian Zhao, Kun Wan, Jing Shi, Xia Hu, Zirui Liu",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2506.09501",
+    "apa": "Yuan, J., Li, H., Ding, X., Xie, W., Li, Y.-J., Zhao, W., Wan, K., Shi, J., Hu, X., & Liu, Z. (2025). *Understanding and mitigating numerical sources of nondeterminism in LLM inference* (arXiv:2506.09501). arXiv. https://doi.org/10.48550/arXiv.2506.09501"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Talking to a Know-It-All GPT or a Second-Guesser Claude? How Repair reveals unreliable Multi-Turn Behavior in LLMs",
+    "authors": "Clara Lachenmaier, Hannah Bultmann, Sina Zarrieß",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2604.19245",
+    "apa": "Lachenmaier, C., Bultmann, H., & Zarrieß, S. (2026). *Talking to a know-it-all GPT or a second-guesser Claude? How repair reveals unreliable multi-turn behavior in LLMs* (arXiv:2604.19245). arXiv. https://doi.org/10.48550/arXiv.2604.19245"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "ReIn: Conversational Error Recovery with Reasoning Inception",
+    "authors": "Takyoung Kim, Jinseok Nam, Chandrayee Basu, Xing Fan, Chengyuan Ma, Heng Ji, Gokhan Tur, Dilek Hakkani-Tür",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2602.17022",
+    "apa": "Kim, T., Nam, J., Basu, C., Fan, X., Ma, C., Ji, H., Tur, G., & Hakkani-Tür, D. (2026). *ReIn: Conversational error recovery with reasoning inception* (arXiv:2602.17022). arXiv. https://doi.org/10.48550/arXiv.2602.17022"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Synthetic Error Injection Fails to Elicit Self-Correction in Language Models",
+    "authors": "David X. Wu, Shreyas Kapur, Anant Sahai, Stuart Russell",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2512.02389",
+    "apa": "Wu, D. X., Kapur, S., Sahai, A., & Russell, S. (2025). *Synthetic error injection fails to elicit self-correction in language models* (arXiv:2512.02389). arXiv. https://doi.org/10.48550/arXiv.2512.02389"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Hidden Error Awareness in Chain-of-Thought Reasoning: The Signal Is Diagnostic, Not Causal",
+    "authors": "Aojie Yuan, Zhiyuan Julian Su, Haiyue Zhang, Yi Nian, Yue Zhao",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2605.09502",
+    "apa": "Yuan, A., Su, Z. J., Zhang, H., Nian, Y., & Zhao, Y. (2026). *Hidden error awareness in chain-of-thought reasoning: The signal is diagnostic, not causal* (arXiv:2605.09502). arXiv. https://doi.org/10.48550/arXiv.2605.09502"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Mitigating Lost in Multi-turn Conversation via Curriculum RL with Verifiable Accuracy and Abstention Rewards",
+    "authors": "Ming Li, Pei Chen, Zhenhao Zhang, Tao Yang, Xinyang Zhang, Han Li, Tianyu Cao, Ming Zeng, Zhuofeng Wu, Meng Jiang, Huasheng Li, Lihong Li, Bing Yin",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2510.18731",
+    "apa": "Li, M., Chen, P., Zhang, Z., Yang, T., Zhang, X., Li, H., Cao, T., Zeng, M., Wu, Z., Jiang, M., Li, H., Li, L., & Yin, B. (2025). *Mitigating lost in multi-turn conversation via curriculum RL with verifiable accuracy and abstention rewards* (arXiv:2510.18731). arXiv. https://doi.org/10.48550/arXiv.2510.18731"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Intelligent chatbot dialogue breakdown solutions and challenges: A systematic literature review",
+    "authors": "Khuloud Alshawkani, Farookh Khadeer Hussain",
+    "year": "2025",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0950705125010998",
+    "apa": "Alshawkani, K., & Hussain, F. K. (2025). Intelligent chatbot dialogue breakdown solutions and challenges: A systematic literature review. *Knowledge-Based Systems, 326*, Article 114054. https://doi.org/10.1016/j.knosys.2025.114054"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Studying and Understanding the Effectiveness and Failures of Conversational LLM-Based Repair",
+    "authors": "Aolin Chen, Haojun Wu, Qi Xin, Steven P. Reiss, Jifeng Xuan",
+    "year": "2025",
+    "url": "https://arxiv.org/abs/2503.15050",
+    "apa": "Chen, A., Wu, H., Xin, Q., Reiss, S. P., & Xuan, J. (2025). *Studying and understanding the effectiveness and failures of conversational LLM-based repair* (arXiv:2503.15050). arXiv. https://doi.org/10.48550/arXiv.2503.15050"
+  },
+  {
+    "category": "Current scholarly",
+    "title": "Generation of Dialogue Breakdown Repair Utterance in Non-task Oriented Conversation",
+    "authors": "Kazuya Tsubokura, Yurie Iribe, Norihide Kitaoka",
+    "year": "2026",
+    "url": "https://aclanthology.org/2026.sigdial-1.38/",
+    "apa": "Tsubokura, K., Iribe, Y., & Kitaoka, N. (2026). Generation of dialogue breakdown repair utterance in non-task oriented conversation. In *Proceedings of the 27th Annual Meeting of the Special Interest Group on Discourse and Dialogue* (pp. 553–558). Association for Computational Linguistics. https://aclanthology.org/2026.sigdial-1.38/"
+  },
+  {
+    "category": "Rival theories",
+    "title": "The Self-Correction Illusion: Role Relabeling Gates Explicit Error Flagging in Large Language Models",
+    "authors": "Kuan-Yen Chen, Fang-Yi Su, Shih-Yen Lin, Bao Li, Jung-Hsien Chiang",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2606.05976",
+    "apa": "Chen, K.-Y., Su, F.-Y., Lin, S.-Y., Li, B., & Chiang, J.-H. (2026). *The self-correction illusion: Role relabeling gates explicit error flagging in large language models* (arXiv:2606.05976). arXiv. https://doi.org/10.48550/arXiv.2606.05976"
+  },
+  {
+    "category": "Rival theories",
+    "title": "Self-Attribution Bias: When AI Monitors Go Easy on Themselves",
+    "authors": "Dipika Khullar, Jack Hopkins, Rowan Wang, Fabien Roger",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2603.04582",
+    "apa": "Khullar, D., Hopkins, J., Wang, R., & Roger, F. (2026). *Self-attribution bias: When AI monitors go easy on themselves* (arXiv:2603.04582). arXiv. https://doi.org/10.48550/arXiv.2603.04582"
+  },
+  {
+    "category": "Rival theories",
+    "title": "It's Not Always Sycophancy: Measuring LLM Conformity as a Function of Epistemic Uncertainty",
+    "authors": "Kevin H. Guo, Chao Yan, Avinash Baidya, Katherine Brown, Xiang Gao, Juming Xiong, Zhijun Yin, Bradley A. Malin",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2605.27288",
+    "apa": "Guo, K. H., Yan, C., Baidya, A., Brown, K., Gao, X., Xiong, J., Yin, Z., & Malin, B. A. (2026a). *It’s not always sycophancy: Measuring LLM conformity as a function of epistemic uncertainty* (arXiv:2605.27288). arXiv. https://doi.org/10.48550/arXiv.2605.27288"
+  },
+  {
+    "category": "Rival theories",
+    "title": "Self-Preference Is Weak or Absent in Verifiable Instruction-Following Revision: A Four-Model Test Under Genuine Authorship",
+    "authors": "William Guey, Pierrick Bougault",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2606.20093",
+    "apa": "Guey, W., & Bougault, P. (2026). *Self-preference is weak or absent in verifiable instruction-following revision: A four-model test under genuine authorship* (arXiv:2606.20093). arXiv. https://doi.org/10.48550/arXiv.2606.20093"
+  },
+  {
+    "category": "Rival theories",
+    "title": "Measuring Sycophancy of Language Models in Multi-Turn Dialogues",
+    "authors": "Jiseung Hong, Grace Byun, Seungone Kim, Kai Shu",
+    "year": "2025",
+    "url": "https://aclanthology.org/2025.findings-emnlp.121/",
+    "apa": "Hong, J., Byun, G., Kim, S., & Shu, K. (2025). Measuring sycophancy of language models in multi-turn dialogues. In *Findings of the Association for Computational Linguistics: EMNLP 2025* (pp. 2239–2259). Association for Computational Linguistics. https://doi.org/10.18653/v1/2025.findings-emnlp.121"
+  },
+  {
+    "category": "Rival theories",
+    "title": "Echoes of Agreement: Argument Driven Sycophancy in Large Language Models",
+    "authors": "Avneet Kaur",
+    "year": "2025",
+    "url": "https://aclanthology.org/2025.findings-emnlp.1241/",
+    "apa": "Kaur, A. (2025). Echoes of agreement: Argument driven sycophancy in large language models. In *Findings of the Association for Computational Linguistics: EMNLP 2025* (pp. 22803–22812). Association for Computational Linguistics. https://doi.org/10.18653/v1/2025.findings-emnlp.1241"
+  },
+  {
+    "category": "Rival theories",
+    "title": "Self-Augmented Preference Alignment for Sycophancy Reduction in LLMs",
+    "authors": "Chien-Hung Chen, Hen-Hsen Huang, Hsin-Hsi Chen",
+    "year": "2025",
+    "url": "https://aclanthology.org/2025.emnlp-main.625/",
+    "apa": "Chen, C.-H., Huang, H.-H., & Chen, H.-H. (2025). Self-augmented preference alignment for sycophancy reduction in LLMs. In *Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing* (pp. 12390–12402). Association for Computational Linguistics. https://doi.org/10.18653/v1/2025.emnlp-main.625"
+  },
+  {
+    "category": "Rival theories",
+    "title": "Reported Confidence in LLMs Tracks Commitment More Than Correctness",
+    "authors": "Dharshan Kumaran",
+    "year": "2026",
+    "url": "https://arxiv.org/abs/2606.29490",
+    "apa": "Kumaran, D. (2026). *Reported confidence in LLMs tracks commitment more than correctness* (arXiv:2606.29490). arXiv. https://doi.org/10.48550/arXiv.2606.29490"
+  },
+  {
+    "category": "Popular media",
+    "title": "Why Language Models Get ‘Lost’ in Conversation",
+    "authors": "Martin Anderson",
+    "year": "2025",
+    "url": "https://www.unite.ai/why-language-models-get-lost-in-conversation/",
+    "apa": "Anderson, M. (2025, May 12). *Why language models get ‘lost’ in conversation*. Unite.AI. https://www.unite.ai/why-language-models-get-lost-in-conversation/"
+  },
+  {
+    "category": "Popular media",
+    "title": "What Is Multi-Turn LLM Conversation Degradation?",
+    "authors": "Future AGI",
+    "year": "2026",
+    "url": "https://futureagi.com/glossary/multi-turn-llm-conversation-degradation/",
+    "apa": "Future AGI. (2026, May 7). *What is multi-turn LLM conversation degradation?* https://futureagi.com/glossary/multi-turn-llm-conversation-degradation/"
+  },
+  {
+    "category": "Popular media",
+    "title": "Multi-Turn LLM Evaluation in 2026: What You Need to Know",
+    "authors": "Jeffrey Ip",
+    "year": "2026",
+    "url": "https://www.confident-ai.com/blog/multi-turn-llm-evaluation-in-2026",
+    "apa": "Ip, J. (2026, March 22). *Multi-turn LLM evaluation in 2026: What you need to know*. Confident AI. https://www.confident-ai.com/blog/multi-turn-llm-evaluation-in-2026"
+  },
+  {
+    "category": "Popular media",
+    "title": "Context Poisoning in Long-Running AI Agents",
+    "authors": "Tian Pan",
+    "year": "2026",
+    "url": "https://tianpan.co/blog/2026-04-15-context-poisoning-long-running-agents",
+    "apa": "Pan, T. (2026, April 15). Context poisoning in long-running AI agents. *TianPan.co*. https://tianpan.co/blog/2026-04-15-context-poisoning-long-running-agents"
+  },
+  {
+    "category": "Popular media",
+    "title": "LLM Evaluation Framework: Trajectories vs. Outputs",
+    "authors": "LangChain",
+    "year": "2026",
+    "url": "https://www.langchain.com/resources/llm-evaluation-framework",
+    "apa": "LangChain. (2026, April 8). *LLM evaluation framework: Trajectories vs. outputs*. https://www.langchain.com/resources/llm-evaluation-framework"
+  },
+  {
+    "category": "Popular media",
+    "title": "Why You Can't Trust Chatbots—Now More Than Ever",
+    "authors": "Charles Q. Choi",
+    "year": "2024",
+    "url": "https://spectrum.ieee.org/chatgpt-reliability",
+    "apa": "Choi, C. Q. (2024, October 3). Why you can’t trust chatbots—now more than ever. *IEEE Spectrum*. https://spectrum.ieee.org/chatgpt-reliability"
+  },
+  {
+    "category": "Popular media",
+    "title": "AI Sycophancy: Why Chatbots Agree With You",
+    "authors": "Matthew Hutson",
+    "year": "2026",
+    "url": "https://spectrum.ieee.org/ai-sycophancy",
+    "apa": "Hutson, M. (2026, March 11). AI sycophancy: Why chatbots agree with you. *IEEE Spectrum*. https://spectrum.ieee.org/ai-sycophancy"
+  },
+  {
+    "category": "Popular media",
+    "title": "AI Companions: 10 Breakthrough Technologies 2026",
+    "authors": "Rhiannon Williams",
+    "year": "2026",
+    "url": "https://www.technologyreview.com/2026/01/12/1130018/ai-companions-chatbots-relationships-2026-breakthrough-technology/",
+    "apa": "Williams, R. (2026, January 12). AI companions: 10 breakthrough technologies 2026. *MIT Technology Review*. https://www.technologyreview.com/2026/01/12/1130018/ai-companions-chatbots-relationships-2026-breakthrough-technology/"
+  }
+]
