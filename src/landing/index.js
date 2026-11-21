@@ -7,6 +7,7 @@ import { SplitText } from 'gsap/SplitText';
 import { renderStatic, renderPreview } from './fallback.js';
 import { sAt, outroAt, flipAt, smoothstep, isMobile } from './timeline.js';
 import { createAnnotations } from './annotations.js';
+import { losses } from '../config.js';
 import { scrollToTarget, reducedMotion } from '../common/smooth.js';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -31,6 +32,7 @@ export function initLanding() {
     counter: landing.querySelector('[data-counter]'),
     counterMsg: landing.querySelector('[data-counter-msg]'),
     missing: landing.querySelector('[data-missing]'),
+    missingDetail: landing.querySelector('[data-missing-detail]'),
     hint: landing.querySelector('[data-hint]'),
     skip: landing.querySelector('[data-skip]'),
     headline: landing.querySelector('[data-headline]'),
@@ -101,12 +103,16 @@ function enter3D(landing, el, params) {
     const o = outroAt(p);
     const n = Math.min(128, Math.max(0, Math.round(s)));
     el.counterMsg.textContent = `message ${n}`;
-    // After message 47 turns red, a second line counts how long the form has been missing.
-    const lost = flipAt(p) > 0.6;
-    const missing = Math.min(81, Math.max(0, n - 47));
-    const text = !lost ? '' : missing > 0 ? `sign-up form missing for ${missing} message${missing === 1 ? '' : 's'}` : 'sign-up form missing';
-    if (el.missing.textContent !== text) el.missing.textContent = text;
-    el.missing.classList.toggle('is-on', lost);
+    // After message 47 turns red, the counter adds up the requests lost so far (see losses
+    // in config.js) and names the latest one.
+    const lost = losses.filter((l, i) => (i === 0 ? flipAt(p) > 0.6 : s >= l.at - 0.4));
+    const count = lost.length ? `${lost.length} request${lost.length === 1 ? '' : 's'} lost` : '';
+    const latest = lost[lost.length - 1];
+    const detail = latest ? `latest: ${latest.what}, msg ${latest.at}` : '';
+    if (el.missing.textContent !== count) el.missing.textContent = count;
+    if (el.missingDetail.textContent !== detail) el.missingDetail.textContent = detail;
+    el.missing.classList.toggle('is-on', lost.length > 0);
+    el.missingDetail.classList.toggle('is-on', lost.length > 0);
     el.counter.style.opacity = String(1 - o);
     el.skip.style.opacity = String(1 - o);
     el.skip.style.visibility = o > 0.98 ? 'hidden' : '';

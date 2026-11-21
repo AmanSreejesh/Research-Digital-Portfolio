@@ -6,9 +6,10 @@
 //
 // Beats (p ranges):
 //   0.00-0.06 stop 0 · 0.06-0.14 run 1 · 0.14-0.25 stop 1 · 0.25-0.33 run 2
-//   0.33-0.44 stop 2 · 0.44-0.51 run 3 · 0.51-0.70 stop 3, the mistake (read,
-//   flip to red, camera moves in on the missing form, pulls back)
-//   0.70-0.92 warp and final stop · 0.92-0.95 hold · 0.95-1.00 headline
+//   0.33-0.44 stop 2 · 0.44-0.51 run 3 · 0.51-0.72 stop 3: the student's message
+//   clashes with message 30, the reply flips to red, the camera moves in on the
+//   missing form and pulls back
+//   0.72-0.92 warp and final stop · 0.92-0.95 hold · 0.95-1.00 headline
 //
 // The annotations that point at the chat use these same beats (src/landing/annotations.js).
 
@@ -51,6 +52,9 @@ const ease = {
   warp: (t) => (t < 0.75 ? warpCruise(t / 0.75) * 0.985 : 0.985 + 0.015 * ease.backOut((t - 0.75) / 0.25)),
 };
 
+// Where the warp after message 47 starts.
+export const WARP_START = 0.72;
+
 // [p0, p1, s0, s1, ease]
 export const SEGMENTS = [
   [0.0, 0.06, 0.8, 1.05, 'sineInOut'], // stop 0, slight drift
@@ -59,8 +63,8 @@ export const SEGMENTS = [
   [0.25, 0.33, 15.1, 31.0, 'power3InOut'], // run 2, faster
   [0.33, 0.44, 31.0, 31.1, 'sineInOut'], // stop 2
   [0.44, 0.51, 31.1, 47.0, 'power3InOut'], // run 3, faster again
-  [0.51, 0.7, 47.0, 47.15, 'sineInOut'], // stop 3, the longest hold
-  [0.7, 0.92, 47.15, 128.0, 'warp'], // warp, then the final stop
+  [0.51, WARP_START, 47.0, 47.15, 'sineInOut'], // stop 3, the longest hold
+  [WARP_START, 0.92, 47.15, 128.0, 'warp'], // warp, then the final stop
   [0.92, 1.0, 128.0, 128.0, 'linear'], // final message, then the headline
 ];
 
@@ -76,7 +80,7 @@ export function sAt(p) {
 const D = 1e-4;
 const PEAK = (() => {
   let m = 0;
-  for (let p = 0.7; p < 0.92; p += 0.0005) m = Math.max(m, Math.abs(sAt(p + D) - sAt(p - D)) / (2 * D));
+  for (let p = WARP_START; p < 0.92; p += 0.0005) m = Math.max(m, Math.abs(sAt(p + D) - sAt(p - D)) / (2 * D));
   return m;
 })();
 
@@ -86,19 +90,19 @@ const RUN_SCALE = 2800;
 
 export function velocityAt(p) {
   const raw = Math.abs(sAt(clamp(p + D)) - sAt(clamp(p - D))) / (2 * D);
-  return clamp(p >= 0.7 ? raw / PEAK : raw / RUN_SCALE);
+  return clamp(p >= WARP_START ? raw / PEAK : raw / RUN_SCALE);
 }
 
 // Message 47: green on arrival, then red spreading out from the false sentence.
-export const flipAt = (p) => smoothstep(0.575, 0.61, p);
+export const flipAt = (p) => smoothstep(0.6, 0.635, p);
 
 // After the flip the camera moves in on the spot where the sign-up form used to be.
-export const pushAt = (p) => smoothstep(0.615, 0.645, p) * (1 - smoothstep(0.672, 0.698, p));
+export const pushAt = (p) => smoothstep(0.642, 0.672, p) * (1 - smoothstep(0.694, 0.718, p));
 
 // Front of the red wave, in slots. Replies after message 47 turn red once it passes them.
 export function waveAt(p, s) {
-  if (p < 0.605) return 46.5;
-  if (p < 0.7) return lerp(47.5, 61, ease.sineInOut((p - 0.605) / 0.095));
+  if (p < 0.63) return 46.5;
+  if (p < WARP_START) return lerp(47.5, 61, ease.sineInOut((p - 0.63) / (WARP_START - 0.63)));
   return Math.max(61, s + 14);
 }
 

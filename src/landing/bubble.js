@@ -16,16 +16,24 @@ const THUMB_W = 2.5;
 const THUMB_H = THUMB_W * THUMB_RATIO;
 const MAX_W = { user: 3.0, ai: 3.7 };
 
-function tokenize(text, highlight) {
-  const words = text.split(' ');
-  let hlStart = -1;
-  let hlEnd = -1;
-  if (highlight) {
-    const i = text.indexOf(highlight);
-    hlStart = text.slice(0, i).split(' ').length - 1;
-    hlEnd = hlStart + highlight.split(' ').length - 1;
-  }
-  return words.map((w, i) => ({ w, hl: i >= hlStart && i <= hlEnd && hlStart >= 0 }));
+// Word indexes [first, last] of a phrase inside the message, or [-1, -1].
+function phraseRange(text, phrase) {
+  const i = phrase ? text.indexOf(phrase) : -1;
+  if (i < 0) return [-1, -1];
+  const first = text.slice(0, i).split(' ').length - 1;
+  return [first, first + phrase.split(' ').length - 1];
+}
+
+// hl: part of the AI's false claim (turns red). mk: part of a student phrase that
+// clashes with another message (drawn with a gray marker).
+function tokenize(text, highlight, mark) {
+  const [h0, h1] = phraseRange(text, highlight);
+  const [m0, m1] = phraseRange(text, mark);
+  return text.split(' ').map((w, i) => ({
+    w,
+    hl: h0 >= 0 && i >= h0 && i <= h1,
+    mk: m0 >= 0 && i >= m0 && i <= m1,
+  }));
 }
 
 function layoutText(ctx, tokens, maxW) {
@@ -52,7 +60,7 @@ export function measureMessage(msg, ppu) {
   const px = FS * ppu;
   c.font = `${px}px ${CHAT_FONT}`;
   const maxTextW = (MAX_W[msg.side] - PAD * 2) * ppu;
-  const lines = layoutText(c, tokenize(msg.text, msg.highlight), maxTextW);
+  const lines = layoutText(c, tokenize(msg.text, msg.highlight, msg.mark), maxTextW);
   const textW = Math.max(...lines.map((l) => l.width)) / ppu;
   const contentW = msg.thumb ? Math.max(textW, THUMB_W) : textW;
   const w = Math.min(MAX_W[msg.side], contentW + PAD * 2 + 0.02);
@@ -75,6 +83,18 @@ function drawFace(canvas, msg, m, ppu, { chars = Infinity, red = false } = {}) {
   const x0 = PAD * ppu;
   const y0 = PAD * ppu + px * 0.86;
   const space = ctx.measureText(' ').width;
+  // Gray marker behind a clashing phrase, joined across the spaces between its words.
+  ctx.fillStyle = '#c4c4c4';
+  m.lines.forEach((line, li) =>
+    line.items.forEach((it, wi) => {
+      if (!it.mk) return;
+      const next = line.items[wi + 1];
+      const by = y0 + li * LH * ppu;
+      const padX = px * 0.12;
+      const w = it.width + (next && next.mk ? space : padX);
+      ctx.fillRect(x0 + it.x - (wi === 0 || !line.items[wi - 1].mk ? padX : 0), by - px * 0.92, w + padX, px * 1.22);
+    }),
+  );
   m.lines.forEach((line, li) => {
     line.items.forEach((it, wi) => {
       if (left <= 0) return;
@@ -109,6 +129,19 @@ function anchorPoints(m, size, ppu) {
   const thumbLeft = left + PAD;
   const thumbTop = top - (PAD + m.textH + 0.2);
   const v = (x, y) => new THREE.Vector3(x, y, FACE_Z);
+  // The marked phrase's box on its first line (it's kept short enough to fit on one).
+  let mk = null;
+  m.lines.forEach((line, li) =>
+    line.items.forEach((it) => {
+      if (!it.mk) return;
+      if (mk && mk.li !== li) return;
+      const x0 = left + PAD + it.x / ppu;
+      const x1 = x0 + it.width / ppu;
+      const yMid = top - PAD - FS * 0.45 - li * LH;
+      if (!mk) mk = { li, x0, x1, yMid };
+      mk.x1 = Math.max(mk.x1, x1);
+    }),
+  );
   // The highlighted sentence's box (first to last highlighted word).
   let hl = null;
   m.lines.forEach((line, li) =>
@@ -130,6 +163,15 @@ function anchorPoints(m, size, ppu) {
     thumb: (fx, fy) => v(thumbLeft + fx * THUMB_W, thumbTop - fy * THUMB_H),
     // the end of the highlighted sentence, at the middle of its last line
     highlightEnd: () => (hl ? v(hl.x1 + 0.04, hl.y1) : null),
+    // the marked phrase: its left end, a point on its top edge, and its four corners
+    markLeft: () => (mk ? v(mk.x0 - 0.05, mk.yMid) : null),
+    markTop: () => (mk ? v(mk.x0 + 0.12, mk.yMid + FS * 0.62) : null),
+    markCorners: () => {
+      if (!mk) return null;
+      const t = mk.yMid + FS * 0.62;
+      const b = mk.yMid - FS * 0.62;
+      return [v(mk.x0 - 0.03, t), v(mk.x1 + 0.03, t), v(mk.x1 + 0.03, b), v(mk.x0 - 0.03, b)];
+    },
   };
 }
 

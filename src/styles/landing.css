@@ -139,6 +139,11 @@
   --tone: var(--wrong);
 }
 
+/* A student message that clashes with an earlier one: white and dashed. */
+.annot--clash {
+  --tone: #f0f0f0;
+}
+
 .annot__g {
   opacity: 0;
   transition: opacity 0.25s var(--ease-out);
@@ -173,6 +178,29 @@
   stroke-dashoffset: 0;
   transition-duration: 0.8s;
   transition-delay: 0.08s;
+}
+
+/* Clash lines are dashed and keep moving, with a dark outline underneath
+   so they still show where they cross the white student bubble. */
+.annot--clash .annot__line,
+.annot--clash .annot__frame {
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  stroke-dashoffset: 0;
+  animation: annot-dash 0.9s linear infinite;
+}
+
+.annot__halo {
+  fill: none;
+  stroke: #060606;
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+
+@keyframes annot-dash {
+  to {
+    stroke-dashoffset: -9;
+  }
 }
 
 .annot__ping {
@@ -275,6 +303,54 @@
   clip-path: inset(0);
 }
 
+/* A quote from an earlier message, and a plain second line under the main text. */
+.annot__quote,
+.annot__sub {
+  display: block;
+  margin-top: 6px;
+  line-height: 1.35;
+  text-wrap: balance;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.5s var(--ease-out) 0.55s;
+}
+
+.annot__quote {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-2);
+}
+
+.annot__sub {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.annot__label.is-left .annot__quote,
+.annot__label.is-left .annot__sub {
+  clip-path: inset(0 0 0 100%);
+}
+
+.annot__label.is-on .annot__quote,
+.annot__label.is-on .annot__sub {
+  clip-path: inset(0);
+}
+
+/* Small labels: the three losses tagged on the final preview. */
+.annot__label.is-small .annot__text {
+  font-size: 1rem;
+}
+
+/* Frames whose label is hidden on narrow screens. */
+.annot__label.is-nolabel {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.annot__g.is-nolabel .annot__line,
+.annot__g.is-nolabel .annot__dot {
+  display: none;
+}
+
 /* The two labels on the missing form are the loudest thing in the sequence. */
 .annot__label.is-key {
   max-width: min(20rem, var(--cap, 100vw));
@@ -303,7 +379,12 @@
   font-size: 1.25rem;
 }
 
-/* Counter: "message 52", then in red how long the sign-up form has been missing. */
+.annot.is-narrow .annot__quote,
+.annot.is-narrow .annot__sub {
+  font-size: 0.9375rem;
+}
+
+/* Counter: "message 92", then in red how many requests have been lost so far and the latest one. */
 .landing__missing {
   display: block;
   margin-top: 4px;
@@ -316,6 +397,11 @@
 .landing__missing.is-on {
   opacity: 1;
   transform: none;
+}
+
+.landing__missing--detail {
+  margin-top: 2px;
+  color: var(--text-2);
 }
 
 @media (max-width: 899px), (max-aspect-ratio: 11/10) {
