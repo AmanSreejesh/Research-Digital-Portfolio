@@ -137,22 +137,23 @@ export async function createScene({ container, mobile, onLost, onFrame, og = fal
 
   // ---- Camera ----
   // The chat sits in the middle of the frame with room on both sides (wide screens) or
-  // above and below (narrow screens) for the annotations.
+  // above and below (narrow screens) for the annotations, and a strip at the bottom for
+  // the progress bar.
   let dist = 6;
   const computeDistance = () => {
     const aspect = width / height;
     const t = Math.tan(THREE.MathUtils.degToRad(BASE_FOV / 2));
     if (params.wide) {
-      camera.setViewOffset(width, height, 0, -height * 0.045, width, height);
+      camera.setViewOffset(width, height, 0, height * 0.01, width, height);
       // Squarer screens give the chat a little less width so the labels beside it fit.
       const wNeed = (params.column * 1.12) / (aspect < 1.5 ? 0.5 : 0.56);
-      dist = Math.max(wNeed / 2 / (t * aspect), 6.1 / 2 / t);
-      zoom.center = [0.5, 0.455];
+      dist = Math.max(wNeed / 2 / (t * aspect), 6.7 / 2 / t);
+      zoom.center = [0.5, 0.51];
     } else {
       camera.setViewOffset(width, height, 0, -height * 0.02, width, height);
       const wNeed = params.column * 1.06;
-      // About 7.6 units of height: the pair of messages plus room for a label above and below.
-      dist = Math.max(wNeed / 2 / (t * aspect), 7.6 / 2 / t);
+      // About 8 units of height: the pair of messages, a label above and below, and the progress bar.
+      dist = Math.max(wNeed / 2 / (t * aspect), 8 / 2 / t);
       zoom.center = [0.5, 0.48];
     }
   };

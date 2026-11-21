@@ -19,6 +19,8 @@ Then open http://localhost:5173/Research-Digital-Portfolio/ in a browser. The pa
 
 To check the version people see with reduced motion turned on (or without WebGL), add `?static` to the address.
 
+To see exactly what will be deployed, run `npm run build` and then `npm run preview`, and open http://localhost:4173/Research-Digital-Portfolio/.
+
 ## Where to edit things
 
 | What | File |
@@ -60,7 +62,8 @@ After deploying, open the live link in a private window and on a phone, signed o
 
 ## How the landing sequence works
 
-- `src/landing/timeline.js` turns scroll progress into the camera's position along the conversation. Every frame is computed from scroll progress, so scrolling back up reverses it exactly.
+- The landing plays as steps. Each scroll, swipe, arrow key or click on the button at the bottom moves to the next stop at a fixed speed, then the page scrolls on normally. Scrolling back to the top steps backward through it. `src/landing/index.js` handles the input.
+- `src/landing/timeline.js` lists the steps (`STEPS`) and turns story progress into the camera's position along the conversation. Every frame is computed from that progress, so stepping back reverses it exactly.
 - `src/landing/scene.js` sets up the renderer, camera and postprocessing (zoom blur, grain, vignette).
 - `src/landing/bubble.js` draws the nine readable messages onto canvas textures. `src/landing/thumbnails.js` draws the small website previews, including the sign-up form that disappears after message 47.
 - `src/landing/filler.js` places the 120 or so unreadable messages as one instanced mesh. `src/landing/material.js` has their shader, including the red spread and the speed streaks.

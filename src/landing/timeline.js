@@ -1,5 +1,6 @@
-// The landing sequence's rhythm, as pure functions of scroll progress p (0 to 1).
-// Everything on screen is computed from p, so scrolling back up reverses it exactly.
+// The landing sequence's rhythm, as pure functions of story progress p (0 to 1).
+// Everything on screen is computed from p, so stepping back reverses it exactly.
+// p moves from step to step (STEPS below) when the visitor scrolls, swipes or presses a key.
 //
 //   s(p)  camera position along the conversation, in message slots (0 to 128)
 //   v(p)  camera speed: about 0.2 in the runs, 1 at the peak of the warp
@@ -108,6 +109,50 @@ export function waveAt(p, s) {
 
 // 0 to 1 over the last part: the final message drifts up and dims, the headline comes in.
 export const outroAt = (p) => smoothstep(0.95, 1.0, p);
+
+// The landing plays as steps: one scroll, swipe or arrow key moves to the next stop, at a
+// fixed speed, so scrolling fast can't skip anything and scrolling slowly still moves.
+// p = where the step rests. path = how to get there from the previous step: a list of
+// [p, share of the time]. Stretches where nothing moves get a small share, so the camera
+// doesn't sit still between stops. duration = seconds going forward (back is quicker).
+export const STEPS = [
+  { p: 0 },
+  { p: 0.17, duration: 1.3, path: [[0.06, 0.08], [0.14, 0.8], [0.17, 0.12]] },
+  { p: 0.36, duration: 1.3, path: [[0.25, 0.1], [0.33, 0.78], [0.36, 0.12]] },
+  { p: 0.585, duration: 1.6, path: [[0.44, 0.1], [0.51, 0.68], [0.585, 0.22]] },
+  // the reply turns red: the false claim and the missing form, side by side
+  { p: 0.64, duration: 1.7, path: [[0.6, 0.1], [0.635, 0.72], [0.64, 0.18]] },
+  // the camera moves in on the empty spot
+  { p: 0.68, duration: 1.3, path: [[0.642, 0.06], [0.672, 0.84], [0.68, 0.1]] },
+  { p: 0.935, duration: 4.0, path: [[0.72, 0.18], [0.92, 0.74], [0.935, 0.08]] },
+  { p: 1, duration: 1.2, path: [[1, 1]] },
+];
+
+// Points and time shares for moving from step a to the next or previous step b.
+export function stepPath(a, b) {
+  const hi = Math.max(a, b);
+  const pts = [STEPS[hi - 1].p, ...STEPS[hi].path.map((x) => x[0])];
+  const shares = STEPS[hi].path.map((x) => x[1]);
+  if (b < a) {
+    pts.reverse();
+    shares.reverse();
+  }
+  return { pts, shares, duration: STEPS[hi].duration * (b < a ? 0.7 : 1) };
+}
+
+// Position along a step path at time fraction u (0 to 1).
+export function pathAt({ pts, shares }, u) {
+  let acc = 0;
+  for (let i = 0; i < shares.length; i++) {
+    const next = acc + shares[i];
+    if (u <= next || i === shares.length - 1) {
+      const t = shares[i] > 0 ? clamp((u - acc) / shares[i]) : 1;
+      return lerp(pts[i], pts[i + 1], t);
+    }
+    acc = next;
+  }
+  return pts[pts.length - 1];
+}
 
 export const isMobile = () =>
   window.matchMedia('(max-width: 767px)').matches || window.matchMedia('(pointer: coarse)').matches;

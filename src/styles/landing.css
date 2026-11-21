@@ -40,8 +40,7 @@
 }
 
 .landing__counter,
-.landing__skip,
-.landing__hint {
+.landing__skip {
   position: absolute;
   z-index: 4;
   font-family: var(--font-label);
@@ -65,17 +64,75 @@
   color: var(--text-2);
 }
 
-.landing__hint {
-  bottom: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--text-2);
+/* Progress through the steps, bottom center: one segment per step, and a button
+   that does the same thing as scrolling. */
+.landing__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(16px, 3.5vh, 32px);
+  z-index: 4;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
   align-items: center;
+  gap: 12px;
+  pointer-events: none;
 }
 
-.landing__hint span {
+.landing__progress > * {
+  pointer-events: auto;
+}
+
+.landing__bar {
+  display: flex;
+  gap: 6px;
+}
+
+.landing__bar li {
+  width: clamp(22px, 3vw, 36px);
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(240, 240, 240, 0.2);
+  overflow: hidden;
+}
+
+.landing__bar span {
+  display: block;
+  height: 100%;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.landing__next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--text-2);
+  font-family: var(--font-label);
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s var(--ease-out);
+}
+
+.landing__next:hover {
+  color: var(--text);
+}
+
+.landing__progress.is-start .landing__next {
+  padding: 10px 18px;
+  border: 1px solid rgba(240, 240, 240, 0.28);
+  color: var(--text);
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+.landing__arrow {
   display: inline-block;
   animation: hint-bob 2.4s var(--ease-out) infinite;
 }
@@ -673,7 +730,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing__hint span {
+  .landing__arrow {
     animation: none;
   }
   .landing__canvas-wrap,

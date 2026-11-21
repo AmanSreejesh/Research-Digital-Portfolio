@@ -27,7 +27,13 @@
             <span class="landing__missing landing__missing--detail" data-missing-detail></span>
           </div>
           <a class="landing__skip" href="#question" data-skip>Skip intro</a>
-          <div class="landing__hint" data-hint aria-hidden="true">scroll <span>↓</span></div>
+          <!-- Progress through the steps, and a button that does the same as scrolling. -->
+          <div class="landing__progress" data-progress>
+            <ol class="landing__bar" data-progress-bar aria-hidden="true"></ol>
+            <button type="button" class="landing__next" data-next>
+              <span data-next-label>Scroll to start</span> <span class="landing__arrow" aria-hidden="true">↓</span>
+            </button>
+          </div>
 
           <!-- Headline. Edit the text here. -->
           <div class="landing__headline" data-headline>

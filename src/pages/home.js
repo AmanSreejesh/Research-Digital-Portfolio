@@ -9,8 +9,8 @@ import { initDemos } from '../home/demos.js';
 gsap.registerPlugin(ScrollTrigger);
 
 boot();
-initSmooth({ gsap, ScrollTrigger });
-initLanding();
+const lenis = initSmooth({ gsap, ScrollTrigger });
+initLanding({ lenis });
 initWindowStrip();
 initDemos();
 initReveal();

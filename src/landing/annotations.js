@@ -199,7 +199,7 @@ export function createAnnotations(stage, before) {
 
   return {
     // frame: projection helpers from scene.js. p: scroll progress. s: camera slot.
-    update(frame, p, s, now, { width, height, wide, top }) {
+    update(frame, p, s, now, { width, height, wide, top, bottom = 12 }) {
       if (width !== lastW || height !== lastH || wide !== lastWide) {
         svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
         root.classList.toggle('is-wide', wide);
@@ -293,7 +293,7 @@ export function createAnnotations(stage, before) {
           const gap = 36;
           lx = place === 'left' ? Math.min(A.x, E.x) - gap - it.w : Math.max(A.x, E.x) + gap;
           lx = clamp(lx, gutter, width - gutter - it.w);
-          ly = clamp(A.y - it.metaY, top + 4, height - it.h - 12);
+          ly = clamp(A.y - it.metaY, top + 4, height - it.h - bottom);
           const endX = place === 'left' ? lx + it.w : lx;
           const endY = ly + it.metaY;
           const kneeX = place === 'left' ? endX + 14 : endX - 14;
@@ -308,7 +308,7 @@ export function createAnnotations(stage, before) {
           const gap = 22;
           lx = clamp(A.x - 14, gutter, width - gutter - it.w);
           ly = place === 'above' ? E.y - gap - it.h : E.y + gap;
-          ly = clamp(ly, top + 4, height - it.h - 12);
+          ly = clamp(ly, top + 4, height - it.h - bottom);
           const endY = place === 'above' ? ly + it.h : ly;
           d = `M${A.x.toFixed(1)} ${A.y.toFixed(1)}L${A.x.toFixed(1)} ${endY.toFixed(1)}`;
         }
