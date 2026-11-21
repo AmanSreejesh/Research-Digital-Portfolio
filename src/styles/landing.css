@@ -44,7 +44,7 @@
 .landing__hint {
   position: absolute;
   z-index: 4;
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.875rem;
 }
 
@@ -221,11 +221,25 @@
 
 .annot__meta {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-family: var(--font-label);
+  font-size: 0.875rem;
   line-height: 1.4;
   color: var(--text-2);
   white-space: nowrap;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.4s var(--ease-out) 0.15s;
+}
+
+.annot__label.is-on .annot__meta {
+  clip-path: inset(0);
+}
+
+.annot__label.is-left .annot__meta {
+  clip-path: inset(0 0 0 100%);
+}
+
+.annot__label.is-left.is-on .annot__meta {
+  clip-path: inset(0);
 }
 
 .annot__state {
@@ -278,7 +292,7 @@
 }
 
 .annot.is-narrow .annot__meta {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
 }
 
 .annot.is-narrow .annot__text {
@@ -362,7 +376,7 @@
 }
 
 .headline__course {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.9375rem;
   color: var(--text-2);
 }
@@ -446,7 +460,7 @@
 }
 
 .msg__num {
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.8125rem;
   color: var(--text-3);
   margin-bottom: 6px;
@@ -513,7 +527,7 @@
   align-items: center;
   gap: 7px;
   margin-top: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.875rem;
 }
 
@@ -535,7 +549,7 @@
 
 .msg__note {
   margin-top: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.875rem;
   color: var(--wrong);
 }
@@ -545,7 +559,7 @@
   align-items: center;
   gap: 14px;
   margin: 18px 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-label);
   font-size: 0.875rem;
   color: var(--text-2);
 }

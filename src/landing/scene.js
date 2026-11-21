@@ -26,9 +26,9 @@ const BASE_FOV = 45;
 
 export async function createScene({ container, mobile, onLost, onFrame, og = false }) {
   try {
-    await document.fonts.load('500 16px "IBM Plex Mono"');
+    await document.fonts.load('500 16px "IBM Plex Sans"');
   } catch {
-    /* the annotation labels are measured after this font loads; they fall back to the system mono font */
+    /* the annotation labels are measured after this font loads; they fall back to the system sans font */
   }
 
   const renderer = new THREE.WebGLRenderer({

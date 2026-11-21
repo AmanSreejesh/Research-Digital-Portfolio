@@ -30,7 +30,6 @@ const SPECS = [
 ];
 
 const SVGNS = 'http://www.w3.org/2000/svg';
-const SCRAMBLE = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
@@ -167,20 +166,6 @@ export function createAnnotations(stage, before) {
     else it.offAt = now;
   }
 
-  // Meta line decodes from random characters over about 0.4 s.
-  function scramble(it, now) {
-    const t = clamp((now - it.onAt - 120) / 420, 0, 1);
-    const full = it.metaText;
-    const n = Math.floor(full.length * t);
-    let s = full.slice(0, n);
-    for (let i = n; i < full.length; i++) {
-      const ch = full[i];
-      s += ch === ' ' || ch === '·' ? ch : SCRAMBLE[(Math.random() * SCRAMBLE.length) | 0];
-    }
-    if (it.idx.textContent !== s) it.idx.textContent = s;
-    return t >= 1;
-  }
-
   return {
     // frame: projection helpers from scene.js. p: scroll progress. s: camera slot.
     update(frame, p, s, now, { width, height, wide, top }) {
@@ -209,6 +194,7 @@ export function createAnnotations(stage, before) {
         if (!it.metaText) {
           const [m, st] = meta(spec, bubbleSide);
           it.metaText = m;
+          it.idx.textContent = m;
           it.state.textContent = st ? ` · ${st}` : '';
         }
 
@@ -300,8 +286,6 @@ export function createAnnotations(stage, before) {
             it.ping.style.opacity = it.on ? String(0.7 * (1 - t) * Math.min(1, (now - it.onAt) / 700)) : '0';
           }
         }
-
-        if (it.on) scramble(it, now);
       }
     },
     dispose() {

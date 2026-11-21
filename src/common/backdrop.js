@@ -5,7 +5,7 @@
 import { reducedMotion } from './smooth.js';
 
 const SPACING = 30;
-const BASE = 0.13;
+const BASE = 0.08;
 
 export function initBackdrop() {
   const canvas = document.createElement('canvas');
@@ -46,13 +46,13 @@ export function initBackdrop() {
           // Two slow waves crossing each other; only their peaks show.
           const wave = Math.sin(i * 0.21 + t * 0.35) * Math.sin(gy * 0.17 - t * 0.27) + Math.sin((i + gy) * 0.09 + t * 0.2);
           const peak = Math.max(0, wave - 0.9);
-          a += peak * 0.2;
+          a += peak * 0.14;
           const dx = x - pointer.x;
           const dy = y - pointer.y;
           const d2 = dx * dx + dy * dy;
           if (d2 < 32400) {
             const k = 1 - Math.sqrt(d2) / 180;
-            a += k * k * 0.45;
+            a += k * k * 0.32;
           }
         }
         ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
