@@ -14,22 +14,17 @@
 
     <main id="main">
       <!-- The animated opening. src/landing/index.js decides between the 3D version and the
-           static chat (reduced motion, no WebGL). The chat, narration and request list live in src/config.js. -->
+           static chat (reduced motion, no WebGL). The chat messages and the annotation text live in src/config.js. -->
       <section class="landing" id="landing" aria-label="Introduction" data-landing>
         <div class="landing__stage" data-stage>
           <div class="landing__canvas-wrap" data-canvas-wrap aria-hidden="true"></div>
           <div class="landing__preview" data-preview aria-hidden="true"></div>
           <div class="landing__veil" data-veil aria-hidden="true"></div>
 
-          <div class="story" data-story aria-hidden="true">
-            <div class="story__captions" data-captions></div>
-            <div class="story__spec">
-              <p class="story__spec-title">What the student asked for</p>
-              <ul class="spec" data-spec></ul>
-            </div>
+          <div class="landing__counter" data-counter aria-hidden="true">
+            <span data-counter-msg>message 1</span>
+            <span class="landing__missing" data-missing></span>
           </div>
-
-          <div class="landing__counter" data-counter aria-hidden="true">message 1</div>
           <a class="landing__skip" href="#question" data-skip>Skip intro</a>
           <div class="landing__hint" data-hint aria-hidden="true">scroll <span>↓</span></div>
 

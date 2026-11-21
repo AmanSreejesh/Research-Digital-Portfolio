@@ -19,15 +19,16 @@ import { measureMessage, createReadable } from './bubble.js';
 import { fillerSizes, createFiller } from './filler.js';
 import { createDust } from './dust.js';
 import { ZoomBlurEffect } from './zoomblur.js';
+import { GHOST } from './thumbnails.js';
 import { sAt, velocityAt, flipAt, waveAt, outroAt, pushAt, smoothstep } from './timeline.js';
 
 const BASE_FOV = 45;
 
-export async function createScene({ container, mobile, onLost, og = false }) {
+export async function createScene({ container, mobile, onLost, onFrame, og = false }) {
   try {
     await document.fonts.load('500 16px "IBM Plex Mono"');
   } catch {
-    /* labels fall back to the system mono font */
+    /* the annotation labels are measured after this font loads; they fall back to the system mono font */
   }
 
   const renderer = new THREE.WebGLRenderer({
@@ -58,6 +59,7 @@ export async function createScene({ container, mobile, onLost, og = false }) {
 
   const measured = script.map((msg) => ({ msg, m: measureMessage(msg, ppu) }));
   const readableSlots = new Set(script.map((m) => m.pos));
+  const aiReadables = new Set(script.filter((m) => m.side === 'ai').map((m) => m.pos));
   const fillerData = fillerSizes(readableSlots, mobile);
   const sizes = [];
   for (let k = 0; k < SLOTS; k++) {
@@ -83,6 +85,8 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     const next = layoutParams(width, height);
     if (params && next.wide === params.wide) return;
     params = next;
+    // Narrow screens put the AI's labels under its bubble, so leave extra room there.
+    params.extraAfter = params.wide ? null : aiReadables;
     path = buildPath(sizes, params);
     filler.place(path, params);
     const c = new THREE.Vector3();
@@ -90,7 +94,6 @@ export async function createScene({ container, mobile, onLost, og = false }) {
       bubbleCenter(path, r.msg.pos, r.size, params, c);
       r.base = c.clone();
       r.group.position.copy(c);
-      r.placeNote(false);
     });
     if (dust) {
       scene.remove(dust.mesh);
@@ -133,28 +136,24 @@ export async function createScene({ container, mobile, onLost, og = false }) {
   composer.setSize(width, height, false);
 
   // ---- Camera ----
-  // Wide screens: the chat sits in the left part of the frame (the narration is on the right).
-  // Narrow screens: it sits a little low, under the narration line.
+  // The chat sits in the middle of the frame with room on both sides (wide screens) or
+  // above and below (narrow screens) for the annotations.
   let dist = 6;
-  let capturing = false;
-  const SHIFT_X = 0.17;
-  const SHIFT_Y = 0.075;
   const computeDistance = () => {
     const aspect = width / height;
     const t = Math.tan(THREE.MathUtils.degToRad(BASE_FOV / 2));
     if (params.wide) {
-      // The share image has no narration column, so it stays centered.
-      const sx = capturing ? 0 : SHIFT_X;
-      camera.setViewOffset(width, height, width * sx, -height * 0.045, width, height);
-      const wNeed = (params.column * 1.12) / 0.6;
+      camera.setViewOffset(width, height, 0, -height * 0.045, width, height);
+      // Squarer screens give the chat a little less width so the labels beside it fit.
+      const wNeed = (params.column * 1.12) / (aspect < 1.5 ? 0.5 : 0.56);
       dist = Math.max(wNeed / 2 / (t * aspect), 6.1 / 2 / t);
-      zoom.center = [0.5 - sx, 0.455];
+      zoom.center = [0.5, 0.455];
     } else {
-      // The narration panel covers roughly the bottom quarter, so frame the chat in the space above it.
-      camera.setViewOffset(width, height, 0, height * SHIFT_Y, width, height);
+      camera.setViewOffset(width, height, 0, -height * 0.02, width, height);
       const wNeed = params.column * 1.06;
-      dist = Math.max(wNeed / 2 / (t * aspect), 5.4 / 0.62 / 2 / t);
-      zoom.center = [0.5, 0.5 + SHIFT_Y];
+      // About 7.6 units of height: the pair of messages plus room for a label above and below.
+      dist = Math.max(wNeed / 2 / (t * aspect), 7.6 / 2 / t);
+      zoom.center = [0.5, 0.48];
     }
   };
   computeDistance();
@@ -164,6 +163,8 @@ export async function createScene({ container, mobile, onLost, og = false }) {
   const camPos = new THREE.Vector3();
   const pushCam = new THREE.Vector3();
   const ghostWorld = new THREE.Vector3();
+  const ghostRect = GHOST.gallery;
+  const ghostLocal = byPos[47].anchors.thumb(ghostRect.x + ghostRect.w / 2, ghostRect.y + ghostRect.h / 2);
   const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
   const finePointer = window.matchMedia('(pointer: fine)').matches;
   const onPointer = (e) => {
@@ -174,7 +175,6 @@ export async function createScene({ container, mobile, onLost, og = false }) {
 
   // ---- State from scroll ----
   let progress = 0;
-  let lastSpot = 0;
   const start = performance.now();
   const opening = byPos[1];
 
@@ -221,20 +221,11 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     // After the flip, move in on the red marker where the sign-up form used to be.
     const k = pushAt(p);
     shared.uSpot.value = k;
-    if (k > 0 || lastSpot > 0) {
-      // Dim the other readable messages' labels along with the bubbles.
-      readables.forEach((r) => {
-        if (r.msg.pos === 47 || r.msg.pos === 1) return;
-        r.group.children.forEach((c) => {
-          if (c.material && c.material.isMeshBasicMaterial) c.material.opacity = 1 - 0.85 * k;
-        });
-      });
-    }
-    lastSpot = k;
-    if (k > 0 && byPos[47].ghost) {
-      ghostWorld.copy(byPos[47].ghost).add(byPos[47].group.position);
+    if (k > 0) {
+      ghostWorld.copy(ghostLocal).add(byPos[47].group.position);
       // Aim a little below the marker so it sits above the middle and the next message stays out of frame.
-      pushCam.set(ghostWorld.x + side * 0.35, ghostWorld.y - 0.15, ghostWorld.z + dist * 0.66);
+      // Narrow screens already fill the width with the bubble, so they move in less.
+      pushCam.set(ghostWorld.x + side * 0.35, ghostWorld.y - 0.15, ghostWorld.z + dist * (params.wide ? 0.66 : 0.82));
       ghostWorld.y -= 0.4;
       camPos.lerp(pushCam, k);
       look.lerp(ghostWorld, k);
@@ -261,6 +252,31 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     }
   };
 
+  // ---- Screen positions for the annotations (src/landing/annotations.js) ----
+  const pv = new THREE.Vector3();
+  const toScreen = (out) => {
+    pv.project(camera);
+    out.x = (pv.x + 1) * 0.5 * width;
+    out.y = (1 - pv.y) * 0.5 * height;
+    return out;
+  };
+  const frameApi = {
+    info: (pos) => ({ anchors: byPos[pos].anchors, size: byPos[pos].size, side: byPos[pos].msg.side }),
+    // A point given in a readable bubble's own coordinates, on its front face.
+    project(pos, lx, ly, out) {
+      const r = byPos[pos];
+      pv.set(lx, ly, 0.045).add(r.group.position);
+      return toScreen(out);
+    },
+    // A point on the conversation path at slot s, shifted by (dx, dy) world units.
+    projectPath(slot, dx, dy, out) {
+      pointAt(path, slot, pv);
+      pv.x += dx;
+      pv.y += dy;
+      return toScreen(out);
+    },
+  };
+
   // ---- Loop ----
   let visible = true;
   let raf = 0;
@@ -269,6 +285,8 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     raf = 0;
     if (disposed || !visible) return;
     apply(now);
+    camera.updateMatrixWorld();
+    onFrame?.(frameApi, progress, sAt(progress), now, { width, height, wide: params.wide });
     composer.render();
     raf = requestAnimationFrame(tick);
   };
@@ -317,7 +335,6 @@ export async function createScene({ container, mobile, onLost, og = false }) {
     // Dev helper: render one frame at 1200x630 and save it as public/og.png (only with ?og on the dev server).
     async captureOG(p = 0.735) {
       const prev = { progress, width, height };
-      capturing = true;
       progress = p;
       width = 1200;
       height = 630;
@@ -332,7 +349,6 @@ export async function createScene({ container, mobile, onLost, og = false }) {
       const url = renderer.domElement.toDataURL('image/png');
       await fetch('/__save-og', { method: 'POST', body: url });
       ({ progress, width, height } = prev);
-      capturing = false;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.5 : 2));
       renderer.setSize(width, height, false);
       composer.setSize(width, height, false);

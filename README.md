@@ -24,12 +24,14 @@ To check the version people see with reduced motion turned on (or without WebGL)
 | What | File |
 |---|---|
 | Name, email, GitHub link, site URL | `src/config.js` |
-| The landing chat messages, narration lines, request tracker, and the green and red colors | `src/config.js` |
+| The landing chat messages, the annotation text, and the green and red colors | `src/config.js` |
+| When and where each annotation appears on the landing | `src/landing/annotations.js` |
 | The example chats next to "What I'm testing" | `src/home/demos.js` |
 | The recovery window walkthrough | `src/home/window-strip.js` |
 | Headline at the end of the landing sequence | `index.html` (inside `data-headline`) |
 | Home page text below the landing | `index.html` |
 | About page | `about.html` |
+| About page photo (two sizes of the same image, about 4:5) | `src/assets/portrait-600.webp`, `src/assets/portrait-880.webp` |
 | Process page text, dropped ideas, research plan, status line | `process.html` |
 | Timeline rows | `process.html`, change `data-status` to `done`, `progress` or `upcoming` |
 | The 40 sources and their APA references | `src/data/sources.json` |
@@ -62,4 +64,5 @@ After deploying, open the live link in a private window and on a phone, signed o
 - `src/landing/scene.js` sets up the renderer, camera and postprocessing (zoom blur, grain, vignette).
 - `src/landing/bubble.js` draws the nine readable messages onto canvas textures. `src/landing/thumbnails.js` draws the small website previews, including the sign-up form that disappears after message 47.
 - `src/landing/filler.js` places the 120 or so unreadable messages as one instanced mesh. `src/landing/material.js` has their shader, including the red spread and the speed streaks.
+- `src/landing/annotations.js` draws the labels, lines and corner frames that point at the bubbles. Each frame, `scene.js` tells it where the bubbles are on screen, so the labels move with the chat.
 - `src/landing/fallback.js` builds the static chat used for reduced motion, browsers without WebGL and screen readers.

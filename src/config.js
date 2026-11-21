@@ -83,6 +83,7 @@ export const script = [
     thumb: 'final',
     note: 'sign-up form missing since message 47',
   },
+  // `note` only shows in the static version; the 3D version uses the annotations below.
 ];
 
 // Number of filler messages between the readable stops (used by the static version).
@@ -93,8 +94,27 @@ export const gaps = [
   { after: 47, count: 80, spreading: true },
 ];
 
-// Narration shown beside the 3D chat, one line per beat (timing is in src/landing/timeline.js).
-// The static version shows the same lines between the messages (`before` = the message they come before).
+// Labels that point at the 3D chat while it moves. Where each one attaches and when it
+// shows up is in src/landing/annotations.js. The small line above each label
+// ("msg 31 · AI · correct") is filled in automatically.
+export const annotations = {
+  ask0: 'Asks for a robotics club website: dark, and good on phones',
+  build1: 'Builds the first version',
+  ask14: 'Asks for a schedule page',
+  done15: 'Adds it and leaves the rest alone',
+  ask30: 'Asks for a sign-up form on the home page',
+  form31: 'Sign-up form added here',
+  ask46: 'Asks for a photo gallery at the top',
+  done47: 'Adds the gallery',
+  claim47: 'Says nothing else changed',
+  lost47: 'The sign-up form is gone. Nobody asked for that.',
+  after: 'Every reply after this builds on the version without the form',
+  claim128: 'Calls the site finished without noticing the form is gone',
+  lost128: 'Still no sign-up form, 81 messages later',
+};
+
+// The same story as plain sentences, for the static version of the landing page
+// (reduced motion, no WebGL, screen readers). `before` = the message they come before.
 export const captions = [
   { id: 'start', before: 0, text: 'A student asks an AI to build a website for their robotics club.' },
   { id: 'schedule', before: 14, text: 'They ask for a schedule page. The AI adds it and leaves everything else alone.' },
@@ -111,15 +131,4 @@ export const captions = [
     after: 128,
     text: 'The AI calls the site finished. The form has been missing for 81 messages, and the AI never noticed.',
   },
-];
-
-// The tracker of what the student asked for. `from` is the message where they asked;
-// `lostAt` is where the AI dropped it.
-export const requests = [
-  { id: 'site', name: 'A website for the robotics club', short: 'Website', from: 0 },
-  { id: 'dark', name: 'Dark background', short: 'Dark', from: 0 },
-  { id: 'phones', name: 'Works on phones', short: 'Phones', from: 0 },
-  { id: 'schedule', name: 'Competition schedule page', short: 'Schedule', from: 14 },
-  { id: 'form', name: 'Sign-up form on the home page', short: 'Sign-up form', from: 30, lostAt: 47 },
-  { id: 'gallery', name: 'Photo gallery at the top', short: 'Gallery', from: 46 },
 ];

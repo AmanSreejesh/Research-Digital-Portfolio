@@ -27,13 +27,13 @@ export function rng(seed) {
   };
 }
 
-// Wide screens put the chat on the left and the narration on the right.
+// Wide screens have room beside the chat for the annotations; narrow screens put them above and below.
 export const isWideLayout = (w, h) => w >= 900 && w / h >= 1.1;
 
 export function layoutParams(w, h) {
   return isWideLayout(w, h)
     ? { wide: true, column: 4.1, dz: 1.15, stack: 0.95, gap: 0.5, drift: 0.22 }
-    : { wide: false, column: 3.95, dz: 1.1, stack: 1.0, gap: 0.45, drift: 0.1 };
+    : { wide: false, column: 3.95, dz: 1.1, stack: 1.0, gap: 0.45, drift: 0.1, extraGap: 1.0 };
 }
 
 // sizes[k] = { w, h } in world units. Returns slot centers and a curve through them.
@@ -44,6 +44,8 @@ export function buildPath(sizes, params) {
   for (let k = 0; k < SLOTS; k++) {
     if (k > 0) {
       y -= params.stack * (sizes[k - 1].h / 2 + sizes[k].h / 2 + params.gap);
+      // Extra space after some bubbles (set by scene.js) for the labels underneath them.
+      if (params.extraAfter && params.extraAfter.has(k - 1)) y -= params.extraGap || 0;
       z -= params.dz;
     }
     const x = params.drift * (Math.sin(k * 0.13) + 0.5 * Math.sin(k * 0.047 + 1.3));

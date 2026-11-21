@@ -421,108 +421,473 @@ html:not(.js) .dropped__topic {
   opacity: 0.86;
 }
 
-.plan-visuals {
-  display: grid;
-  gap: 24px;
-  margin-top: 40px;
+/* Figures under the steps: open layouts with thin rules instead of boxed cards. */
+
+.fig {
+  margin: 88px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
 }
 
-@media (min-width: 980px) {
-  .plan-visuals {
+.fig__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px 28px;
+  margin-bottom: 36px;
+}
+
+.fig__title {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.fig__note {
+  margin-top: 36px;
+  max-width: 58ch;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* Example task, asked two ways */
+
+.ways__grid {
+  display: grid;
+  gap: 40px;
+}
+
+@media (min-width: 820px) {
+  .ways__grid {
     grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .ways__col + .ways__col {
+    padding-left: 40px;
+    border-left: 1px solid var(--hairline);
+  }
+  .ways__col:first-child {
+    padding-right: 40px;
   }
 }
 
-.example,
-.formula {
-  margin: 0;
-  padding: 28px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  background: rgba(15, 15, 15, 0.85);
-}
-
-.example .label,
-.formula .label {
-  display: block;
-  margin-bottom: 22px;
-}
-
-.example__chat .mini-chat__msg {
-  max-width: 92%;
-}
-
-.example__note,
-.formula__note {
-  margin-top: 22px;
-  font-size: var(--fs-small);
+.ways__tag {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
   color: var(--text-2);
-  line-height: 1.55;
 }
 
-.formula__eq {
+.ways__tag span:first-child {
+  color: var(--text);
+}
+
+.ways__chat {
+  gap: 14px;
+  font-size: 1.0625rem;
+}
+
+.ways__msg {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.ways__msg .mini-chat__msg {
+  justify-self: end;
+  max-width: 100%;
+}
+
+.ways__turn {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* The split version's messages appear one turn at a time. */
+.js .ways__chat--split .ways__msg {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.js .ways.is-in .ways__chat--split .ways__msg {
+  opacity: 1;
+  transform: none;
+}
+
+.js .ways.is-in .ways__chat--split .ways__msg:nth-child(2) {
+  transition-delay: 0.45s;
+}
+
+.js .ways.is-in .ways__chat--split .ways__msg:nth-child(3) {
+  transition-delay: 0.9s;
+}
+
+/* The measurement */
+
+.measure__eq {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 14px;
-  margin: 0;
+  align-items: baseline;
+  gap: 4px 14px;
   font-family: var(--font-mono);
-  font-size: clamp(1.0625rem, 1.6vw, 1.3125rem);
+  font-size: clamp(1.0625rem, 1.9vw, 1.5rem);
+  color: var(--text);
 }
 
-.formula__term {
-  padding: 8px 12px;
-  border: 1px solid var(--decor);
-  border-radius: var(--radius);
+.measure__term {
+  white-space: nowrap;
 }
 
-.formula__term:first-child {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+.measure__op {
+  color: var(--text-3);
 }
 
-.formula__op {
-  color: var(--text-2);
+.ruler {
+  --label-w: 76px;
+  display: grid;
+  grid-template-columns: var(--label-w) repeat(10, minmax(0, 1fr));
+  align-items: center;
+  row-gap: 14px;
 }
 
-.formula__chips {
-  display: flex;
-  gap: 8px;
-  margin-top: 18px;
+.ruler__pins,
+.ruler__axis,
+.ruler__probes {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
 }
 
-.formula__chips span {
-  padding: 6px 10px;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
+.ruler__pins {
+  grid-row: 1;
+  height: 58px;
+  align-items: end;
+}
+
+.ruler__pin {
+  grid-column: var(--at);
+  grid-row: 1;
+  position: relative;
+  justify-self: center;
+  padding-bottom: 26px;
   font-family: var(--font-mono);
   font-size: 0.875rem;
+  white-space: nowrap;
+  color: var(--wrong);
+}
+
+/* The pin's stem runs down to the axis. */
+.ruler__pin::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1px;
+  height: 20px;
+  background: currentColor;
+}
+
+.ruler__axis {
+  grid-row: 2;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  color: var(--text-2);
+  text-align: center;
+}
+
+/* Axis line through the tick centers. */
+.ruler__axis::before {
+  content: '';
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 6px;
+  height: 1px;
+  background: var(--decor);
+}
+
+.ruler__axis li {
+  position: relative;
+  padding-top: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ruler__axis li::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--decor);
+}
+
+.ruler__axis li.is-mistake,
+.ruler__axis li.is-fail {
+  color: var(--wrong);
+}
+
+.ruler__axis li.is-mistake::before {
+  background: var(--wrong);
+  border-color: var(--wrong);
+}
+
+.ruler__axis li.is-fail::before {
+  border: 1.5px solid var(--wrong);
+}
+
+.ruler__rowlabel {
+  grid-column: 1;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-3);
+}
+
+.ruler__rowlabel--turn {
+  grid-row: 2;
+  padding-top: 22px;
+}
+
+.ruler__rowlabel--repair {
+  grid-row: 3;
+  margin-top: 14px;
+}
+
+.ruler__probes {
+  grid-row: 3;
+  margin-top: 14px;
+}
+
+.ruler__probes li {
+  grid-column: var(--at);
+  grid-row: 1;
+  justify-self: center;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 0;
+}
+
+.ruler__probes .is-fixed {
+  border: 1.5px solid var(--correct);
+  background: rgba(43, 214, 123, 0.1);
+}
+
+.ruler__probes .is-lost {
+  border: 1.5px solid var(--wrong);
+  background: rgba(255, 74, 61, 0.1);
+}
+
+/* Check mark and cross drawn with borders. */
+.ruler__probes .is-fixed::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid var(--correct);
+  border-bottom: 2px solid var(--correct);
+  transform: rotate(-45deg);
+}
+
+.ruler__probes .is-lost::before,
+.ruler__probes .is-lost::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  margin: -1px 0 0 -6px;
+  background: var(--wrong);
+  transform: rotate(45deg);
+}
+
+.ruler__probes .is-lost::after {
+  transform: rotate(-45deg);
+}
+
+/* Bracket from the center of turn 4 to the center of turn 8. */
+.ruler__span {
+  grid-row: 4;
+  grid-column: 5 / 10;
+  position: relative;
+  height: 52px;
+  margin: 4px 10% 0;
+}
+
+.ruler__span::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 12px;
+  border: 1.5px solid var(--text);
+  border-top: 0;
+  transform-origin: left;
+}
+
+.ruler__span span {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+/* Build-up when the figure scrolls into view: pins drop, repairs fill in turn by turn, then the bracket. */
+.js .measure .ruler__pin {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.5s var(--ease-out) 0.2s, transform 0.5s var(--ease-out) 0.2s;
+}
+
+.js .measure .ruler__pin--fail {
+  transition-delay: 1.5s;
+}
+
+.js .measure .ruler__probes li {
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  transition-delay: calc(0.6s + var(--i) * 0.22s);
+}
+
+.js .measure .ruler__span::before {
+  transform: scaleX(0);
+  transition: transform 0.7s var(--ease-out) 1.9s;
+}
+
+.js .measure .ruler__span span {
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out) 2.4s;
+}
+
+.js .measure.is-in .ruler__pin,
+.js .measure.is-in .ruler__probes li {
+  opacity: 1;
+  transform: none;
+}
+
+.js .measure.is-in .ruler__span::before {
+  transform: none;
+}
+
+.js .measure.is-in .ruler__span span {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .ruler {
+    --label-w: 54px;
+  }
+  .ruler__pins {
+    height: 68px;
+  }
+  .ruler__pin {
+    width: 8em;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+  }
+  .ruler__axis {
+    font-size: 0.8125rem;
+  }
+  .ruler__rowlabel {
+    font-size: 0.75rem;
+  }
+  .ruler__probes li {
+    width: 22px;
+    height: 22px;
+  }
+  .ruler__probes .is-fixed::before {
+    left: 5px;
+    top: 5px;
+    width: 8px;
+    height: 4px;
+  }
+  .ruler__probes .is-lost::before,
+  .ruler__probes .is-lost::after {
+    width: 9px;
+    margin-left: -4.5px;
+  }
+  .ruler__span span {
+    font-size: 1rem;
+  }
+}
+
+/* Where things stand */
+
+.now {
+  margin-top: 88px;
+  padding: 32px 0 36px;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.now__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
   color: var(--text-2);
 }
 
-.status-line {
-  display: grid;
-  grid-template-columns: 14px minmax(0, 1fr);
-  gap: 18px;
-  margin-top: 56px;
-  padding: 28px 0;
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
-  font-size: var(--fs-small);
-}
-
-.status-line .label {
-  margin-bottom: 8px;
-}
-
-.status-line__dot {
-  width: 12px;
-  height: 12px;
-  margin-top: 0.3em;
+.now__dot {
+  position: relative;
+  flex: none;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  border: 1.5px solid var(--text);
-  background: linear-gradient(90deg, var(--text) 50%, transparent 50%);
+  background: var(--text);
+}
+
+.now__dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--text);
+  opacity: 0;
+  animation: now-ping 2.4s var(--ease-out) infinite;
+}
+
+@keyframes now-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.now__text {
+  max-width: 40ch;
+  font-size: clamp(1.375rem, 2.4vw, 1.875rem);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
 }
 
 /* ---------- 04 Timeline ---------- */
@@ -703,5 +1068,17 @@ html:not(.js) .track__fill {
   .js .dropped__topic,
   .track__fill {
     transition: none;
+  }
+  .js .ways__chat--split .ways__msg,
+  .js .measure .ruler__pin,
+  .js .measure .ruler__probes li,
+  .js .measure .ruler__span::before,
+  .js .measure .ruler__span span {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .now__dot::after {
+    animation: none;
   }
 }

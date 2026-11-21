@@ -3,11 +3,10 @@
 
 import * as THREE from 'three';
 import { status } from '../config.js';
-import { drawThumb, THUMB_RATIO, GHOST } from './thumbnails.js';
+import { drawThumb, THUMB_RATIO } from './thumbnails.js';
 import { COLORS, bubbleMaterial, haloMaterial, instanceAttributes, applyAttributes } from './material.js';
 
 const CHAT_FONT = '-apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-const MONO_FONT = '"IBM Plex Mono", ui-monospace, monospace';
 
 // World-unit text metrics.
 const FS = 0.152;
@@ -100,13 +99,38 @@ function drawFace(canvas, msg, m, ppu, { chars = Infinity, red = false } = {}) {
   }
 }
 
-// Center of the red "missing form" marker, in the bubble's own coordinates.
-function ghostPoint(msg, m, size) {
-  const g = GHOST[msg.thumb];
-  if (!g) return null;
-  const left = -size.w / 2 + PAD;
-  const top = size.h / 2 - (PAD + m.textH + 0.2);
-  return new THREE.Vector3(left + (g.x + g.w / 2) * THUMB_W, top - (g.y + g.h / 2) * THUMB_H, 0);
+// Front face of the slab, in the bubble's own coordinates (see slabGeometry in material.js).
+const FACE_Z = 0.045;
+
+// Points on the bubble that the annotations attach to, in the bubble's own coordinates.
+function anchorPoints(m, size, ppu) {
+  const left = -size.w / 2;
+  const top = size.h / 2;
+  const thumbLeft = left + PAD;
+  const thumbTop = top - (PAD + m.textH + 0.2);
+  const v = (x, y) => new THREE.Vector3(x, y, FACE_Z);
+  // The highlighted sentence's box (first to last highlighted word).
+  let hl = null;
+  m.lines.forEach((line, li) =>
+    line.items.forEach((it) => {
+      if (!it.hl) return;
+      const x0 = left + PAD + it.x / ppu;
+      const x1 = x0 + it.width / ppu;
+      const yMid = top - PAD - FS * 0.45 - li * LH;
+      if (!hl) hl = { x0, x1, y0: yMid, y1: yMid };
+      hl.x0 = Math.min(hl.x0, x0);
+      hl.x1 = Math.max(hl.x1, x1);
+      hl.y1 = Math.min(hl.y1, yMid);
+    }),
+  );
+  return {
+    // fx, fy from 0 to 1 across the bubble, measured from its top-left corner
+    face: (fx, fy) => v(left + fx * size.w, top - fy * size.h),
+    // fx, fy from 0 to 1 across the site preview
+    thumb: (fx, fy) => v(thumbLeft + fx * THUMB_W, thumbTop - fy * THUMB_H),
+    // the end of the highlighted sentence, at the middle of its last line
+    highlightEnd: () => (hl ? v(hl.x1 + 0.04, hl.y1) : null),
+  };
 }
 
 // UV center of the highlighted sentence, where message 47's red starts.
@@ -126,34 +150,6 @@ function highlightOrigin(m, size) {
   );
   if (minX === Infinity) return new THREE.Vector2(0.5, 0.5);
   return { minX, maxX, minY, maxY, size };
-}
-
-function labelTexture(text, color, ppu) {
-  const h = 0.2;
-  const c = document.createElement('canvas');
-  const ctx = c.getContext('2d');
-  const px = 0.125 * ppu;
-  ctx.font = `500 ${px}px ${MONO_FONT}`;
-  const tw = ctx.measureText(text).width;
-  c.width = Math.ceil(tw + px * 1.6 + 8);
-  c.height = Math.ceil(h * ppu);
-  ctx.font = `500 ${px}px ${MONO_FONT}`;
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(px * 0.4 + 2, c.height / 2, px * 0.3, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, px * 1.25 + 2, c.height / 2 + 1);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  return { tex, w: c.width / ppu, h: c.height / ppu };
-}
-
-function labelMesh(info, fog) {
-  const mat = new THREE.MeshBasicMaterial({ map: info.tex, transparent: true, depthWrite: false, fog });
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(info.w, info.h), mat);
-  return mesh;
 }
 
 export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) {
@@ -207,7 +203,7 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
   const group = new THREE.Group();
   group.add(mesh);
 
-  const out = { msg, group, mesh, size, single, labels: null, note: null, halo: null, ghost: ghostPoint(msg, m, size) };
+  const out = { msg, group, mesh, size, single, halo: null, anchors: anchorPoints(m, size, ppu) };
 
   if (isAi && msg.status) {
     const hgeo = new THREE.PlaneGeometry(1, 1);
@@ -217,21 +213,6 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
     halo.renderOrder = 2;
     group.add(halo);
     out.halo = halo;
-
-    const correct = labelTexture('correct', status.correct, ppu);
-    const wrong = labelTexture('wrong', status.wrong, ppu);
-    const label = labelMesh(msg.status === 'wrong' ? wrong : correct, true);
-    label.position.set(-size.w / 2 + label.geometry.parameters.width / 2 + 0.04, -size.h / 2 - 0.19, 0.03);
-    group.add(label);
-    out.labels = { mesh: label, correct, wrong };
-
-    if (msg.note) {
-      const n = labelTexture(msg.note, status.wrong, ppu);
-      const note = labelMesh(n, true);
-      out.note = note;
-      out.noteInfo = n;
-      group.add(note);
-    }
   }
 
   // Typing effect (message 1 on load).
@@ -247,32 +228,12 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
 
   out.setStatusOn = (o) => {
     single.uStatusOn.value = o;
-    if (out.labels) {
-      out.labels.mesh.material.opacity = o;
-      out.labels.mesh.visible = o > 0.001;
-    }
   };
 
   // Message 47: 0 = green, 1 = fully red. The red starts at the highlighted sentence.
   out.setFlip = (f) => {
     single.uWipe.value = f;
     single.uOutlineRed.value = Math.min(1, Math.max(0, (f - 0.45) / 0.4));
-    if (out.labels) {
-      const want = f > 0.7 ? out.labels.wrong : out.labels.correct;
-      if (out.labels.mesh.material.map !== want.tex) {
-        out.labels.mesh.material.map = want.tex;
-        out.labels.mesh.geometry.dispose();
-        out.labels.mesh.geometry = new THREE.PlaneGeometry(want.w, want.h);
-        out.labels.mesh.position.x = -size.w / 2 + want.w / 2 + 0.04;
-      }
-    }
-  };
-
-  out.placeNote = (beside) => {
-    if (!out.note) return;
-    const n = out.noteInfo;
-    if (beside) out.note.position.set(size.w / 2 + n.w / 2 + 0.25, size.h / 2 - 0.3, 0.03);
-    else out.note.position.set(-size.w / 2 + n.w / 2 + 0.04, -size.h / 2 - 0.42, 0.03);
   };
 
   out.dispose = () => {
@@ -285,8 +246,6 @@ export function createReadable(msg, size, m, { shared, slab, ppu, anisotropy }) 
     });
     tex.dispose();
     if (texRed !== tex) texRed.dispose();
-    out.labels?.correct.tex.dispose();
-    out.labels?.wrong.tex.dispose();
   };
 
   return out;

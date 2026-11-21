@@ -13,10 +13,25 @@
 
     <main id="main" class="page-main">
       <section class="page-head about-head">
-        <div class="wrap">
-          <p class="eyebrow reveal">About me</p>
-          <h1 class="page-title reveal">Aman<br />Sreejesh</h1>
-          <p class="lede reveal">Student researcher studying how reliable LLMs are in long conversations.</p>
+        <div class="wrap about-head__grid">
+          <div class="about-head__text">
+            <p class="eyebrow reveal">About me</p>
+            <h1 class="page-title reveal">Aman<br />Sreejesh</h1>
+            <p class="lede reveal">Student researcher studying how reliable LLMs are in long conversations.</p>
+          </div>
+          <!-- To change the photo, replace the two files in src/assets (same names, about 4:5). -->
+          <figure class="portrait reveal">
+            <img
+              src="/src/assets/portrait-880.webp"
+              srcset="/src/assets/portrait-600.webp 600w, /src/assets/portrait-880.webp 880w"
+              sizes="(min-width: 900px) 420px, 82vw"
+              width="880"
+              height="1080"
+              alt="Aman Sreejesh"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </figure>
         </div>
       </section>
 

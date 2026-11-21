@@ -1,4 +1,4 @@
-/* Landing sequence: 3D stage, its overlays (narration, request tracker, headline),
+/* Landing sequence: 3D stage, its overlays (annotations, counter, headline),
    and the static chat used for reduced motion, no WebGL, and screen readers. */
 
 .landing {
@@ -49,8 +49,12 @@
 }
 
 .landing__counter {
-  top: calc(var(--header-h) + 16px);
-  left: var(--gutter);
+  top: calc(var(--header-h) + 10px);
+  left: calc(var(--gutter) - 10px);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 18px 8px rgba(0, 0, 0, 0.6);
   color: var(--text-2);
   font-variant-numeric: tabular-nums;
 }
@@ -106,197 +110,203 @@
   max-width: 560px;
 }
 
-/* ---------- Narration and the request tracker ---------- */
+/* ---------- Annotations that follow the chat (src/landing/annotations.js) ---------- */
 
-.story {
+.annot {
   position: absolute;
-  z-index: 3;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
 }
 
-.story__captions {
-  position: relative;
-}
-
-.story__caption {
+.annot__svg {
   position: absolute;
-  inset: 0 0 auto 0;
-  margin: 0;
-  font-size: clamp(1.125rem, 2vw, 2rem);
-  line-height: 1.28;
-  letter-spacing: -0.015em;
-  font-weight: 500;
-  opacity: 0;
-  will-change: opacity, transform;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-.story__caption em {
-  font-style: normal;
+.annot--note {
+  --tone: rgba(240, 240, 240, 0.78);
+}
+
+.annot--correct {
+  --tone: var(--correct);
+}
+
+.annot--wrong {
+  --tone: var(--wrong);
+}
+
+.annot__g {
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.annot__g.is-on {
+  opacity: 1;
+  transition-duration: 0.1s;
+}
+
+/* Lines and frames draw outward from the bubble when they appear. */
+.annot__line,
+.annot__frame {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.25;
+  stroke-linecap: square;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.45s var(--ease-out);
+}
+
+.annot__frame {
+  stroke-width: 2;
+}
+
+.annot__g.is-on .annot__line {
+  stroke-dashoffset: 0;
+}
+
+.annot__g.is-on .annot__frame {
+  stroke-dashoffset: 0;
+  transition-duration: 0.8s;
+  transition-delay: 0.08s;
+}
+
+.annot__ping {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.25;
+  opacity: 0;
+}
+
+.annot__dot {
+  fill: var(--tone);
+  stroke: #060606;
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.annot__g.is-on .annot__dot {
+  transform: scale(1);
+}
+
+.annot__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* --cap is set from JS to the space available beside the bubble. */
+  max-width: min(16.5rem, var(--cap, 100vw));
+  padding: 7px 12px 9px;
+  /* Soft-edged dark backing so the text stays readable over bubbles without drawing a box. */
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 22px 10px rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out), visibility 0s linear 0.25s;
+  will-change: transform;
+}
+
+.annot__label.is-on {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s var(--ease-out) 0.15s, visibility 0s;
+}
+
+.annot__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.annot__state {
+  color: var(--tone);
+}
+
+.annot__text {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-wrap: balance;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.5s var(--ease-out) 0.25s;
+}
+
+.annot__label.is-on .annot__text {
+  clip-path: inset(0);
+}
+
+.annot__label.is-left {
+  text-align: right;
+}
+
+.annot__label.is-left .annot__text {
+  clip-path: inset(0 0 0 100%);
+}
+
+.annot__label.is-left.is-on .annot__text {
+  clip-path: inset(0);
+}
+
+/* The two labels on the missing form are the loudest thing in the sequence. */
+.annot__label.is-key {
+  max-width: min(20rem, var(--cap, 100vw));
+}
+
+.annot__label.is-key .annot__text {
+  font-size: clamp(1.25rem, 1.9vw, 1.75rem);
+  line-height: 1.2;
   color: var(--wrong);
 }
 
-.story__spec-title {
-  margin: 0 0 14px;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  color: var(--text-2);
+.annot.is-narrow .annot__label {
+  max-width: min(19rem, calc(100vw - 32px));
+  padding: 6px 10px 8px;
 }
 
-.spec__item {
-  display: grid;
-  grid-template-columns: 12px minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-  padding: 11px 12px;
-  margin: 0 -12px;
-  border-top: 1px solid var(--hairline);
-  border-radius: var(--radius);
+.annot.is-narrow .annot__meta {
+  font-size: 0.75rem;
+}
+
+.annot.is-narrow .annot__text {
   font-size: 1rem;
-  line-height: 1.3;
-  opacity: 0;
-  transform: translateX(14px);
-  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out), background-color 0.4s var(--ease-out);
 }
 
-.spec__item.is-on {
+.annot.is-narrow .annot__label.is-key .annot__text {
+  font-size: 1.25rem;
+}
+
+/* Counter: "message 52", then in red how long the sign-up form has been missing. */
+.landing__missing {
+  display: block;
+  margin-top: 4px;
+  color: var(--wrong);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.landing__missing.is-on {
   opacity: 1;
   transform: none;
 }
 
-.spec__item.is-new {
-  background: rgba(43, 214, 123, 0.08);
-}
-
-.spec__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--correct);
-  transition: background-color 0.3s;
-}
-
-.spec__state {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--correct);
-  white-space: nowrap;
-}
-
-.spec__item.is-lost {
-  background: rgba(255, 74, 61, 0.12);
-  border-top-color: transparent;
-}
-
-.spec__item.is-lost .spec__dot {
-  background: var(--wrong);
-  animation: lost-pulse 1.6s ease-out infinite;
-}
-
-.spec__item.is-lost .spec__state {
-  color: var(--wrong);
-}
-
-@keyframes lost-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 74, 61, 0.55);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 9px rgba(255, 74, 61, 0);
-  }
-}
-
-.spec__short {
-  display: none;
-}
-
-/* Wide screens: chat on the left, narration and tracker in a column on the right. */
-@media (min-width: 900px) and (min-aspect-ratio: 11/10) {
-  .story {
-    top: calc(var(--header-h) + 72px);
-    bottom: 72px;
-    right: var(--gutter);
-    width: min(36vw, 480px);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 32px;
-  }
-  .story__captions {
-    min-height: 8.5em;
-  }
-  .story__caption {
-    text-shadow: 0 2px 18px rgba(6, 6, 6, 0.9);
-  }
-  /* A solid backing keeps the tracker readable when bubbles pass behind it. */
-  .story__spec {
-    padding: 20px 22px 10px;
-    background: rgba(6, 6, 6, 0.86);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-  }
-  .spec__item {
-    margin: 0 -10px;
-    padding: 11px 10px;
-  }
-}
-
-/* Narrow screens: narration like subtitles in a panel at the bottom, with the tracker as chips. */
 @media (max-width: 899px), (max-aspect-ratio: 11/10) {
-  .story {
-    inset: auto 0 0 0;
-    padding: 16px var(--gutter) 18px;
-    background: rgba(6, 6, 6, 0.94);
-    border-top: 1px solid var(--hairline);
-  }
-  .story__captions {
-    min-height: 5.4em;
-  }
-  .story__caption {
-    font-size: 1.0625rem;
-    line-height: 1.34;
-  }
-  .story__spec {
-    margin-top: 12px;
-  }
-  .story__spec-title {
-    margin-bottom: 8px;
-    font-size: 0.75rem;
-  }
-  .spec {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .spec__item {
-    display: inline-flex;
-    gap: 7px;
-    margin: 0;
-    padding: 4px 9px;
-    border: 1px solid var(--hairline);
-    border-radius: 999px;
+  .landing__counter {
     font-size: 0.8125rem;
-    transform: translateY(6px);
-  }
-  .spec__item.is-lost {
-    border-color: var(--wrong);
-  }
-  .spec__dot {
-    width: 7px;
-    height: 7px;
-  }
-  .spec__name,
-  .spec__state {
-    display: none;
-  }
-  .spec__short {
-    display: inline;
-  }
-  .spec__item.is-lost .spec__short {
-    color: var(--wrong);
-  }
-  .landing__hint {
-    display: none;
   }
 }
 
@@ -563,13 +573,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing__hint span,
-  .spec__item.is-lost .spec__dot {
+  .landing__hint span {
     animation: none;
   }
   .landing__canvas-wrap,
-  .landing__preview,
-  .spec__item {
+  .landing__preview {
     transition: none;
   }
 }

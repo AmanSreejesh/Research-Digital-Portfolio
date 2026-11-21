@@ -236,7 +236,7 @@ const fragment = /* glsl */ `
     col += uRed * vPulse * hasStatus * 0.35;
     col *= 1.0 - 0.42 * vDim;
     // Spotlight on message 47 while the camera moves in on the missing form.
-    col *= 1.0 - 0.8 * uSpot * (1.0 - step(abs(vInfo.z - 47.0), 0.1));
+    col *= 1.0 - 0.9 * uSpot * (1.0 - step(abs(vInfo.z - 47.0), 0.1));
     float fd = length(vViewPos);
     float fogF = 1.0 - exp(-uFogDensity * uFogDensity * fd * fd);
     col = mix(col, uFogColor, clamp(fogF, 0.0, 1.0));
@@ -322,7 +322,7 @@ const haloFragment = /* glsl */ `
     float glow = exp(-max(d, 0.0) / 0.05) * smoothstep(-0.02, 0.01, d);
     float strength = mix(1.0, 1.25, redMix) * (0.75 + 0.25 * vExtra.x);
     vec3 col = mix(uGreen, uRed, redMix) * glow * uStrength * strength * (1.0 - 0.5 * vDim);
-    col *= 1.0 - 0.85 * uSpot * (1.0 - step(abs(vInfo.z - 47.0), 0.1));
+    col *= 1.0 - 0.94 * uSpot * (1.0 - step(abs(vInfo.z - 47.0), 0.1));
     float fd = length(vViewPos);
     col *= exp(-uFogDensity * uFogDensity * fd * fd);
     gl_FragColor = vec4(col, 1.0);

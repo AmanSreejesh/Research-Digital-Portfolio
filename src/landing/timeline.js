@@ -9,6 +9,8 @@
 //   0.33-0.44 stop 2 · 0.44-0.51 run 3 · 0.51-0.70 stop 3, the mistake (read,
 //   flip to red, camera moves in on the missing form, pulls back)
 //   0.70-0.92 warp and final stop · 0.92-0.95 hold · 0.95-1.00 headline
+//
+// The annotations that point at the chat use these same beats (src/landing/annotations.js).
 
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -102,21 +104,6 @@ export function waveAt(p, s) {
 
 // 0 to 1 over the last part: the final message drifts up and dims, the headline comes in.
 export const outroAt = (p) => smoothstep(0.95, 1.0, p);
-
-// Narration beats [id, from, to]. Each line fades in and out at the edges.
-export const BEATS = [
-  ['start', -1, 0.062],
-  ['schedule', 0.132, 0.25],
-  ['form', 0.322, 0.44],
-  ['gallery', 0.505, 0.588],
-  ['mistake', 0.598, 0.7],
-  ['after', 0.712, 0.855],
-  ['end', 0.872, 0.952],
-];
-
-export function beatOpacity(p, from, to, fade = 0.012) {
-  return smoothstep(from - fade, from, p) * (1 - smoothstep(to - fade, to, p));
-}
 
 export const isMobile = () =>
   window.matchMedia('(max-width: 767px)').matches || window.matchMedia('(pointer: coarse)').matches;

@@ -228,41 +228,95 @@
               </li>
             </ol>
 
-            <div class="plan-visuals">
-              <figure class="example reveal">
-                <figcaption class="label">Example: one coding problem split across three turns</figcaption>
-                <div class="mini-chat example__chat">
-                  <div class="mini-chat__msg mini-chat__msg--user">i need a function that takes a list of test scores</div>
-                  <div class="mini-chat__msg mini-chat__msg--user">it should drop the lowest score</div>
-                  <div class="mini-chat__msg mini-chat__msg--user">then return the average, rounded to one decimal</div>
+            <!-- Example task, asked two ways. -->
+            <figure class="fig ways reveal">
+              <figcaption class="fig__head">
+                <span class="label">Example task</span>
+                <span class="fig__title">The same coding problem, asked two ways</span>
+              </figcaption>
+              <div class="ways__grid">
+                <div class="ways__col">
+                  <p class="ways__tag"><span>All at once</span><span>1 turn</span></p>
+                  <div class="mini-chat ways__chat">
+                    <div class="ways__msg">
+                      <span class="ways__turn">turn 1</span>
+                      <div class="mini-chat__msg mini-chat__msg--user">i need a function that takes a list of test scores, drops the lowest one, and returns the average rounded to one decimal</div>
+                    </div>
+                  </div>
                 </div>
-                <p class="example__note">Asked all at once, this is easy. Spread out like this, a model has to remember the first two messages when it writes the answer.</p>
-              </figure>
+                <div class="ways__col">
+                  <p class="ways__tag"><span>Split up</span><span>3 turns</span></p>
+                  <div class="mini-chat ways__chat ways__chat--split">
+                    <div class="ways__msg">
+                      <span class="ways__turn">turn 1</span>
+                      <div class="mini-chat__msg mini-chat__msg--user">i need a function that takes a list of test scores</div>
+                    </div>
+                    <div class="ways__msg">
+                      <span class="ways__turn">turn 2</span>
+                      <div class="mini-chat__msg mini-chat__msg--user">it should drop the lowest score</div>
+                    </div>
+                    <div class="ways__msg">
+                      <span class="ways__turn">turn 3</span>
+                      <div class="mini-chat__msg mini-chat__msg--user">then return the average, rounded to one decimal</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="fig__note">
+                Asked all at once, this is easy. Split up, the model has to remember the first two messages when it writes
+                the answer.
+              </p>
+            </figure>
 
-              <figure class="formula reveal">
-                <figcaption class="label">The measurement</figcaption>
-                <p class="formula__eq">
-                  <span class="formula__term">recovery window</span>
-                  <span class="formula__op">=</span>
-                  <span class="formula__term">first failed repair</span>
-                  <span class="formula__op">−</span>
-                  <span class="formula__term">first mistake</span>
-                </p>
-                <p class="formula__note">
-                  Each repair is tried three times. Since "can't be fixed" really means "wasn't fixed within a few turns,"
-                  I report results within 3, 5 and 8 turns.
-                </p>
-                <div class="formula__chips" aria-hidden="true"><span>3 turns</span><span>5 turns</span><span>8 turns</span></div>
-              </figure>
-            </div>
+            <!-- The measurement. The ruler is an illustration with made-up turn numbers, not a result. -->
+            <figure class="fig measure reveal">
+              <figcaption class="fig__head">
+                <span class="label">The measurement</span>
+                <span class="measure__eq">
+                  <span class="measure__term">recovery window</span> <span class="measure__op">=</span>
+                  <span class="measure__term">first failed repair</span> <span class="measure__op">−</span>
+                  <span class="measure__term">first mistake</span>
+                </span>
+              </figcaption>
+
+              <p class="sr-only">
+                Example: the model's first mistake is at turn 4. Repairs given at turns 5, 6 and 7 fix the answer, and the
+                repair at turn 8 is the first one that doesn't. The recovery window is 8 minus 4, which is 4 turns.
+              </p>
+              <div class="ruler" aria-hidden="true">
+                <div class="ruler__pins">
+                  <span class="ruler__pin ruler__pin--mistake" style="--at: 4">first mistake</span>
+                  <span class="ruler__pin ruler__pin--fail" style="--at: 8">first failed repair</span>
+                </div>
+                <ol class="ruler__axis">
+                  <li>1</li><li>2</li><li>3</li><li class="is-mistake">4</li><li>5</li><li>6</li><li>7</li><li class="is-fail">8</li><li>9</li><li>10</li>
+                </ol>
+                <div class="ruler__rowlabel ruler__rowlabel--turn">turn</div>
+                <ol class="ruler__probes">
+                  <li style="--at: 5; --i: 0" class="is-fixed">fixed</li>
+                  <li style="--at: 6; --i: 1" class="is-fixed">fixed</li>
+                  <li style="--at: 7; --i: 2" class="is-fixed">fixed</li>
+                  <li style="--at: 8; --i: 3" class="is-lost">too late</li>
+                  <li style="--at: 9; --i: 4" class="is-lost">too late</li>
+                  <li style="--at: 10; --i: 5" class="is-lost">too late</li>
+                </ol>
+                <div class="ruler__rowlabel ruler__rowlabel--repair">repair</div>
+                <div class="ruler__span"><span>8 − 4 = 4 turns</span></div>
+              </div>
+
+              <p class="fig__note">
+                Each repair is tried three times. Since "can't be fixed" really means "wasn't fixed within a few turns," I
+                report results within 3, 5 and 8 turns. The turn numbers above are an example, not a result.
+              </p>
+            </figure>
 
             <!-- DRAFT: update this whenever the project moves forward -->
-            <div class="status-line reveal">
-              <span class="status-line__dot" aria-hidden="true"></span>
-              <div>
-                <p class="label">Where things stand · November 2026</p>
-                <p>The plan is set, and I'm building the code that runs the test conversations now. No tests have run yet, so there are no results on this site.</p>
-              </div>
+            <div class="now reveal">
+              <p class="now__label"><span class="now__dot" aria-hidden="true"></span>Where things stand · November 2026</p>
+              <p class="now__text">
+                The plan is set, and I'm building the code that runs the test conversations now. No tests have run yet, so
+                there are no results on this site.
+              </p>
             </div>
           </section>
 

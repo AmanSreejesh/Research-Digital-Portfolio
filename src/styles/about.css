@@ -4,6 +4,71 @@
   max-width: 30ch;
 }
 
+.about-head__grid {
+  display: grid;
+  gap: 48px;
+  align-items: end;
+}
+
+@media (min-width: 900px) {
+  .about-head__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+    gap: var(--gap);
+  }
+}
+
+/* The photo is a cutout on a dark backdrop, framed with crop marks like the
+   annotations on the home page. It's shown in black and white to match the site;
+   delete the filter line to show it in color. */
+.portrait {
+  position: relative;
+  margin: 0;
+  width: min(100%, 420px);
+  aspect-ratio: 880 / 1080;
+  background: linear-gradient(180deg, #161616 0%, #0d0d0d 70%, #0a0a0a 100%);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.06) brightness(1.04);
+}
+
+.portrait::before,
+.portrait::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.portrait::before {
+  top: 10px;
+  left: 10px;
+  border-top: 1px solid var(--text-2);
+  border-left: 1px solid var(--text-2);
+}
+
+.portrait::after {
+  right: 10px;
+  bottom: 10px;
+  border-right: 1px solid var(--text-2);
+  border-bottom: 1px solid var(--text-2);
+}
+
+@media (max-width: 899px) {
+  .portrait {
+    width: min(82vw, 360px);
+  }
+}
+
 .about-grid {
   display: grid;
   gap: 24px;

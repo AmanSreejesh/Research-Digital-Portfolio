@@ -25,6 +25,10 @@ export const THUMB_ALT = {
   final: 'Preview of the finished site. The sign-up form is still missing, marked in red.',
 };
 
+// Where the sign-up form sits in message 31's preview, as fractions of the preview (x, y, w, h).
+// Matches the 'form' layout in drawThumb below.
+export const FORM_RECT = { x: 0.06, y: 33 / 80, w: 0.88, h: 30 / 80 };
+
 // Where the missing form is marked, as fractions of the preview (x, y, w, h).
 export const GHOST = {
   gallery: { x: 0.06, y: 52 / 80, w: 0.88, h: 19 / 80, text: 'the sign-up form was here' },
